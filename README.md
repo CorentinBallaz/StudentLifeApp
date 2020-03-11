@@ -1,2 +1,2 @@
 # StudentLifeApp
-Student dashboard for polytech' students. Developed for PROJ831 course.
+Student dashboard for polytech' students. Developing for PROJ831 course.
