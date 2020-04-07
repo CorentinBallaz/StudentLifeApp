@@ -31,7 +31,7 @@ export class AppComponent {
         if (state) {
           this.router.navigate(['inside']);
         } else {
-          this.router.navigate(['login']);
+          this.router.navigate(['login','register']);
         }
       });
     });

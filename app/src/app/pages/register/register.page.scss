@@ -24,6 +24,11 @@ ion-button {
     font-weight: 200;
 }
 
+.underline {
+    text-decoration: underline;
+    text-align: center;
+  }
+
 @media (min-width: 240px) and (max-width: 768px) {
     ion-grid {
         background: $white-color;

@@ -17,10 +17,6 @@ const routes: Routes = [
     loadChildren: () => import('./notes-manager/notes-manager.module').then( m => m.NotesManagerPageModule)
   },
   {
-    path: 'register',
-    loadChildren: () => import('./register/register.module').then( m => m.RegisterPageModule)
-  },
-  {
     path: 'login', loadChildren: './pages/login/login.module#LoginPageModule'
   },
   {
@@ -28,7 +24,10 @@ const routes: Routes = [
     loadChildren: './pages/inside/inside.module#InsidePageModule',
     canActivate: [AuthGuardService]
   },
-
+  {
+    path: 'register',
+    loadChildren: () => import('./pages/register/register.module').then( m => m.RegisterPageModule)
+  }
 ];
 
 @NgModule({
