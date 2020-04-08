@@ -15,6 +15,7 @@ exports.registerUser = (req, res) => {
 
     User.findOne({ email: req.body.email }, (err, user) => {
         if (err) {
+            console.log("pb 1");
             return res.status(400).json({ 'msg': err });
         }
 
@@ -25,6 +26,7 @@ exports.registerUser = (req, res) => {
         let newUser = User(req.body);
         newUser.save((err, user) => {
             if (err) {
+                console.log("pb 2");
                 return res.status(400).json({ 'msg': err });
             }
             return res.status(201).json(user);

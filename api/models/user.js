@@ -15,11 +15,9 @@ var UserSchema = new mongoose.Schema({
     },
     formation: {
         type: String,
-        required: true
     },
     year : {
         type:String,
-        required : true
     }
 });
 
