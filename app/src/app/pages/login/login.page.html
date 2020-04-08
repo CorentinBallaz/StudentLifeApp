@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar text-center>
+    <ion-title text-center>Bienvenue sur Polytech'App</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+ 
+<ion-content padding>
+  <form [formGroup]="credentialsForm" (ngSubmit)="onSubmit()">
+    <ion-grid>
+      <ion-row justify-content-center>
+        <ion-col align-self-center>
+          <div text-center>
+            <h4 class="ion-text-center">Connexion</h4>
+          </div>
+          <div padding>
+            
+            <ion-item>
+              <ion-input type="email" formControlName="email" placeholder="Email adress"></ion-input>
+            </ion-item>
+    
+            <ion-item>
+              <ion-input type="password" formControlName="password" placeholder="Password"></ion-input>
+            </ion-item>
+
+            <ion-button shape="round" size="medium" expand="block" type="submit" [disabled]="!credentialsForm.valid">Login</ion-button>
+          </div>
+
+          <div text-center>
+            <ion-item routerLink="/register" routerLinkActive="active">
+              <ion-text>
+                <h6 class="underline">Pas encore de compte ?</h6>
+              </ion-text>
+            </ion-item>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>
