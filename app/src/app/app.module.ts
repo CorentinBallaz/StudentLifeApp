@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Storage, IonicStorageModule } from '@ionic/storage';
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 
+
 export function jwtOptionsFactory(storage) {
   return {
     tokenGetter: () => {
