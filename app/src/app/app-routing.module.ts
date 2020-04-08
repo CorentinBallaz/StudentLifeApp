@@ -11,7 +11,8 @@ const routes: Routes = [
   },
   {
     path: 'time-manager',
-    loadChildren: () => import('./time-manager/time-manager.module').then( m => m.TimeManagerPageModule)
+    loadChildren: './time-manager/time-manager.module#TimeManagerPageModule',
+    canActivate: [AuthGuardService]
   },
   {
     path: 'notes-manager',

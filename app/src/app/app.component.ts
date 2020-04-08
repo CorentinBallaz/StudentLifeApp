@@ -29,7 +29,7 @@ export class AppComponent {
 
       this.authService.authenticationState.subscribe(state => {
         if (state) {
-          this.router.navigate(['home']);
+          this.router.navigate(['time-manager']);
         } else {
           this.router.navigate(['login']);
         }
