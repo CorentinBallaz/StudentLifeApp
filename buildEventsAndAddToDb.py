@@ -10,7 +10,20 @@ from icalendar import vDatetime
 from datetime import timedelta
 import pandas as pd
 
-idu4url = "http://ade6-usmb-ro.grenet.fr/jsp/custom/modules/plannings/direct_cal.jsp?resources=2394,2393&projectId=1&calType=ical&login=iCalExport&password=73rosav&lastDate=2030-08-14"
+import pymongo
+from pymongo import MongoClient
+
+client = MongoClient('localhost', 27017) # Connexion à mongo sur le port 27017
+
+db = client.StudentLifeDashboard # On sélectionne la db Analytics
+
+eventCollection = db.events # On sélectionne la collection users
+
+adeCollection = db.ade
+
+
+
+idu4url = "http://ade6-usmb-ro.grenet.fr/jsp/custom/modules/plannings/direct_cal.jsp?resources=2393&projectId=1&calType=ical&login=iCalExport&password=73rosav&lastDate=2030-08-14&firstDate=2019-01-01"
 
 contents = urllib.request.urlopen(idu4url)
 
@@ -49,13 +62,21 @@ count = {}
 for key in occurencies.index :
     count[key]=1
 
+myDf = myDf.drop(['startTimeDate','endTimeDate'],axis=1)
+
+ids = []
 for index, row in myDf.iterrows():
     occurence = count[row["title"]]
     totalOccurence = occurencies[row["title"]]
     myDf.loc[index,'number']=str(occurence)+"/"+str(totalOccurence)
     count[row["title"]]+=1
-
-myDf = myDf.drop(['startTimeDate','endTimeDate'],axis=1)
+    
+    document = {"title":row["title"],"description":row["description"],"place":row["place"],"startTime":row["startTime"],"endTime":row["endTime"],"occurence":row["number"]}
+    res = eventCollection.insert_one(document)
+    _id = 'ObjectId("'+str(res.inserted_id)+'")'
+    ids.append(_id)
+    
+adeCollection.insert_one({"filiere":"IDU4-A1","events":ids})
 
 
     
