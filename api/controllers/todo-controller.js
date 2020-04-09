@@ -5,7 +5,7 @@ var User = require('../models/user')
 
 exports.createTodo = (req,res)=>{
 
-
+    
     User.findOne({email:req.body.email},(err,user) =>{
 
         if (err) {

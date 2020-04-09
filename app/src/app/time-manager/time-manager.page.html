@@ -98,23 +98,30 @@
             <ion-grid>
               <ion-row justify-content-center>
                 <ion-col align-self-center>
+                  <form [formGroup]="todoForm" (ngSubmit)="onSubmitTodo()">
                   <div padding>
                     
                     <ion-item>
-                      <ion-input placeholder="Title"></ion-input>
+                      <ion-input formControlName="title" placeholder="Title"></ion-input>
                     </ion-item>
             
                     <ion-item>
-                      <ion-input placeholder="Content"></ion-input>
+                      <ion-input formControlName="content" placeholder="Content"></ion-input>
                     </ion-item>
 
                     <ion-item>
-                      <ion-label>Terminée</ion-label>
-                      <ion-checkbox slot="end" value=isDone></ion-checkbox>
+                      <ion-label>Deadline</ion-label>
+                      <ion-datetime displayFormat="MM/DD/YYYY HH:mm" pickerFormat="MMM D:HH:mm" formControlName="deadline" [min]="minDate"></ion-datetime>
                     </ion-item>
+
+                    <!-- <ion-item>
+                      <ion-label>Terminée</ion-label>
+                      <ion-checkbox slot="end" formControlName="isDone"></ion-checkbox>
+                    </ion-item> -->
         
-                    <ion-button shape="round" size="medium" expand="block" type="submit">Add TODO</ion-button>
+                    <ion-button shape="round" size="medium" expand="block" type="submit" [disabled]="!todoForm.valid">Add TODO</ion-button>
                   </div>
+                </form>
                 </ion-col>
               </ion-row>
             </ion-grid>

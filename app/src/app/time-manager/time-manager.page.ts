@@ -2,7 +2,8 @@ import { Component, ViewChild, OnInit, Inject, LOCALE_ID } from '@angular/core';
 import { CalendarComponent } from 'ionic2-calendar/calendar';
 import { AlertController } from '@ionic/angular';
 import { formatDate } from '@angular/common';
-
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { TodoService } from '../services/todo.service';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 
@@ -17,7 +18,7 @@ registerLocaleData(localeFr);
   styleUrls: ['./time-manager.page.scss'],
 })
 export class TimeManagerPage implements OnInit {
-
+	todoForm: FormGroup;
 	eventSource = [];
   	viewTitle: string;
   	selectedDay = new Date();
@@ -42,7 +43,7 @@ export class TimeManagerPage implements OnInit {
   	//@ViewChild(CalendarComponent) 
   	myCal: CalendarComponent;
 
-  	constructor(private alertCtrl: AlertController, @Inject(LOCALE_ID) private locale: string, private http : HttpClient) { }
+  	constructor(private formBuilder: FormBuilder, private todoService: TodoService, private alertCtrl: AlertController, @Inject(LOCALE_ID) private locale: string, private http : HttpClient) { }
 
   	resetEvent() {
     this.event = {
@@ -129,9 +130,17 @@ export class TimeManagerPage implements OnInit {
 
 
   	ngOnInit() {
+		this.todoForm = this.formBuilder.group({
+			title: ['', [Validators.required, Validators.minLength(1)]],
+			content: ['', [Validators.required, Validators.minLength(1)]],
+			deadline: ['', [Validators.required, Validators.minLength(1)]]
+		  });
   		this.http.get(this.url,{responseType: 'text'}).subscribe(data => this.edt=data);
-  		this.resetEvent();
-
-  	}
+		this.resetEvent();
+	  }
+	  
+	  onSubmitTodo() {
+		this.todoService.addTodo(this.todoForm.value).subscribe();
+	  }
 
 }
