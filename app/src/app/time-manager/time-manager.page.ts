@@ -59,7 +59,7 @@ export class TimeManagerPage implements OnInit {
  
     buildAndPushEvent(data) {
       data.events.forEach(element => {
-        console.log(element);
+        //console.log(element);
 
         let event={
           title:element.title,
@@ -150,7 +150,7 @@ export class TimeManagerPage implements OnInit {
 			title: ['', [Validators.required, Validators.minLength(1)]],
 			content: ['', [Validators.required, Validators.minLength(1)]],
 			deadline: ['', []],
-			isDone: ['', []]
+			isDone: [false, []]
 		  });
 		this.getTodos();
 	  }
@@ -164,11 +164,29 @@ export class TimeManagerPage implements OnInit {
 		this.myTodos = [];
 		this.todoService.getTodos().subscribe(res => {
 			for (var j = 0; j < Object.values(res).length; j++) {
-				this.myTodos.push(Object.values(res)[j]['label']);
+				var currentJson = {id:Object.values(res)[j]["_id"], label:Object.values(res)[j]['label']};
+				this.myTodos.push(currentJson);
 			}
 	  });
-	  console.log(this.myTodos);
 	}
+
+	getTodo(){
+
+	}
+
+	async onTodoSelected(todo) {
+		// Use Angular date pipe for conversion
+				let start = formatDate(event.startTime, 'medium', this.locale);
+				let end = formatDate(event.endTime, 'medium', this.locale);
+	   
+				const alert = await this.alertCtrl.create({
+			  header: event.title,
+			  subHeader: event.desc,
+			  message: 'From: ' + start + '<br><br>To: ' + end,
+			  buttons: ['OK']
+				});
+			alert.present();
+	  }
 
   ngOnInit() {
         this.resetEvent();

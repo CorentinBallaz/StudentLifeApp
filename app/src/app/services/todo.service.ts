@@ -15,15 +15,13 @@ export class TodoService {
   constructor(private http: HttpClient, private alertController: AlertController, private authService: AuthService) { }
 
   addTodo(credentials) {
-    var Json = {email:this.authService.user['email'], label:credentials['title'],content:credentials['content'],deadline:credentials['deadline'],isDone:credentials['isDone']};
-    return this.http.post(`${this.url}/api/createTodo`, Json).pipe(
+    var Json = {idUser:this.authService.user['id'], label:credentials['title'],content:credentials['content'],deadline:credentials['deadline']};
+    return this.http.post(`${this.url}/api/createTodo`,Json).pipe(
       catchError(e => {
         this.showAlert(e.error.msg);
         throw new Error(e);
       })
-    );
-    
-    
+    );    
   }
 
   getTodos(){
