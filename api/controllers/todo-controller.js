@@ -26,6 +26,19 @@ exports.createTodo = (req,res)=>{
     })
 
 
+};
+
+exports.getTodos = (req,res)=>{
+
+    Todo.find({email:req.params.userMail},(err,todos)=>{
+
+        if (err) throw err;
+
+
+        res.json(todos);
+
+    })
+
 }
 
 

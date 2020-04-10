@@ -1,4 +1,6 @@
 node_modules
+data
+=======
 commande1.bat
 commande2.bat
 commande3.bat
@@ -6,3 +8,4 @@ commande4.bat
 commande5.bat
 lancerAppli.bat
 bdd
+
