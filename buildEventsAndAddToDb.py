@@ -21,7 +21,7 @@ client = MongoClient('localhost', 27017) # Connexion à mongo sur le port 27017
 
 db = client.studentLifeD # On sélectionne la db Analytics
 
-eventCollection = db.events # On sélectionne la collection users
+eventCollection = db.eventades # On sélectionne la collection users
 
 adeCollection = db.ades
 

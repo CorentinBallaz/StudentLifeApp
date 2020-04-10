@@ -59,7 +59,6 @@ export class TimeManagerPage implements OnInit {
  
     buildAndPushEvent(data) {
       data.events.forEach(element => {
-        console.log(element);
 
         let event={
           title:element.title,

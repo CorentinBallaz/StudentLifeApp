@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var EventSchema = new mongoose.Schema({
+var AdeEventSchema = new mongoose.Schema({
         title : {
             type :String,
             required:true,
@@ -21,8 +21,8 @@ var EventSchema = new mongoose.Schema({
         endTime:{
             type:Date
         },
-        occruence:{
+        occurence:{
             type:String
         }
 })
-module.exports = mongoose.model('Event', EventSchema);
+module.exports = mongoose.model('EventAde', AdeEventSchema);
