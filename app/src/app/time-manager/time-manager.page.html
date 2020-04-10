@@ -94,10 +94,10 @@
 
 
         <ion-card>
-          <ion-card-header text-center>
+          <ion-card-header text-center tappable (click)="collapseTodo = !collapseTodo">
             <ion-card-title>Create TODO</ion-card-title>
           </ion-card-header>
-          <ion-card-content>
+          <ion-card-content *ngIf="!collapseTodo">
             <ion-grid>
               <ion-row justify-content-center>
                 <ion-col align-self-center>
