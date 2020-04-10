@@ -5,7 +5,7 @@ var User = require('../models/user')
 
 exports.createTodo = (req,res)=>{
 
-
+    
     User.findOne({email:req.body.email},(err,user) =>{
 
         if (err) {
@@ -25,6 +25,32 @@ exports.createTodo = (req,res)=>{
         }
     })
 
+
+};
+
+exports.getTodos = (req,res)=>{
+
+    Todo.find({email:req.params.userMail},(err,todos)=>{
+
+        if (err) throw err;
+
+
+        res.json(todos);
+
+    })
+
+}
+
+exports.getTodo = (req,res)=>{
+
+    Todo.find({email:req.params.userMail,label:req.params.label},(err,todo)=>{
+
+        if (err) throw err;
+
+
+        res.json(todo);
+
+    })
 
 }
 
