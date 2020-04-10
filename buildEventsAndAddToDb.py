@@ -15,9 +15,9 @@ from pymongo import MongoClient
 
 client = MongoClient('localhost', 27017) # Connexion à mongo sur le port 27017
 
-db = client.StudentLifeDashboard # On sélectionne la db Analytics
+db = client.studentLifeD# On sélectionne la db Analytics
 
-eventCollection = db.events # On sélectionne la collection users
+eventCollection = db.events# On sélectionne la collection users
 
 adeCollection = db.ade
 
@@ -65,6 +65,8 @@ for key in occurencies.index :
 myDf = myDf.drop(['startTimeDate','endTimeDate'],axis=1)
 
 ids = []
+
+
 for index, row in myDf.iterrows():
     occurence = count[row["title"]]
     totalOccurence = occurencies[row["title"]]
