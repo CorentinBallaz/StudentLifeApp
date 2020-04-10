@@ -20,4 +20,8 @@ routes.post('/createTodo',(req,res)=>{
     todoController.createTodo(req,res)
 });
 
+routes.get('/todos/:userMail',(req,res)=>{
+    todoController.getTodos(req,res);
+})
+
 module.exports = routes;
