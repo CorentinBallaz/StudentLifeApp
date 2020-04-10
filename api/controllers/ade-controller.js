@@ -1,8 +1,8 @@
 var Ade = require('../models/ade');
-var Event = require('../models/event')
+var EventAde = require('../models/eventAde')
 
 exports.getEvents = (req,res)=> {
-    Ade.findOne({filiere:"IDU4-A1"},(err1,res1)=>{console.log(res1)}).populate("events").exec(function (err,ade) {
+    Ade.findOne({filiere:"IDU4-A1"}).populate("events").exec(function (err,ade) {
         if (err) {
             return res.status(400).send({ 'msg': err });
         }

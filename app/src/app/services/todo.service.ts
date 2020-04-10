@@ -12,7 +12,8 @@ export class TodoService {
 
   url = environment.url;
 
-  constructor(private http: HttpClient, private alertController: AlertController, private authService: AuthService) { }
+  constructor(private http: HttpClient, private alertController: AlertController, private authService: AuthService) {
+   }
 
   addTodo(credentials) {
     var Json = {idUser:this.authService.user['id'], label:credentials['title'],content:credentials['content'],deadline:credentials['deadline']};
@@ -25,8 +26,8 @@ export class TodoService {
   }
 
   getTodos(){
-    const email = this.authService.user['email'];
-    return this.http.get(`${this.url}/api/todos/${email}`).pipe(
+    const idUser = {idUser:this.authService.user['id']};
+    return this.http.get(`${this.url}/api/todos/${idUser}`).pipe(
       catchError(e => {
         console.log("passé dans l'erreur");
         this.showAlert(e.error.msg);

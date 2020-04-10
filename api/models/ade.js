@@ -7,6 +7,6 @@ var AdeSchema = new mongoose.Schema({
             type :String,
             required:true,
         },
-        events : [{ type: Schema.ObjectId, ref: "Event" }]
+        events : [{ type: Schema.ObjectId, ref: "EventAde" }]
 })
 module.exports = mongoose.model('Ade', AdeSchema);

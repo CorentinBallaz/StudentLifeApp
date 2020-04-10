@@ -59,7 +59,6 @@ export class TimeManagerPage implements OnInit {
  
     buildAndPushEvent(data) {
       data.events.forEach(element => {
-        //console.log(element);
 
         let event={
           title:element.title,
@@ -174,19 +173,19 @@ export class TimeManagerPage implements OnInit {
 
 	}
 
-	async onTodoSelected(todo) {
-		// Use Angular date pipe for conversion
-				let start = formatDate(event.startTime, 'medium', this.locale);
-				let end = formatDate(event.endTime, 'medium', this.locale);
+	// async onTodoSelected(todo) {
+	// 	// Use Angular date pipe for conversion
+	// 			let start = formatDate(event.startTime, 'medium', this.locale);
+	// 			let end = formatDate(event.endTime, 'medium', this.locale);
 	   
-				const alert = await this.alertCtrl.create({
-			  header: event.title,
-			  subHeader: event.desc,
-			  message: 'From: ' + start + '<br><br>To: ' + end,
-			  buttons: ['OK']
-				});
-			alert.present();
-	  }
+	// 			const alert = await this.alertCtrl.create({
+	// 		  header: event.title,
+	// 		  subHeader: event.desc,
+	// 		  message: 'From: ' + start + '<br><br>To: ' + end,
+	// 		  buttons: ['OK']
+	// 			});
+	// 		alert.present();
+	//   }
 
   ngOnInit() {
         this.resetEvent();
