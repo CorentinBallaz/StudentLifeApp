@@ -26,8 +26,8 @@ export class TodoService {
   }
 
   getTodos(){
-    const idUser = {idUser:this.authService.user['id']};
-    return this.http.get(`${this.url}/api/todos/${idUser}`).pipe(
+    const userID = this.authService.user['id'];
+    return this.http.get(`${this.url}/api/todos/${userID}`).pipe(
       catchError(e => {
         console.log("passé dans l'erreur");
         this.showAlert(e.error.msg);

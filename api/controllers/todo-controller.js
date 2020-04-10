@@ -53,11 +53,8 @@ exports.getTodos = (req,res)=>{
             if (err) {
                 return res.status(400).send({'msg': err});
             } else {
-                // res=todos;
-                // return res;
-                console.log(todos.valueOf('todos'))
                 resa = todos[0]['todos'];
-                res.status(400).send(resa);
+                res.status(200).send(resa);
             }
         }
     )
