@@ -18,6 +18,7 @@ registerLocaleData(localeFr);
   styleUrls: ['./time-manager.page.scss'],
 })
 export class TimeManagerPage implements OnInit {
+	myTodos = [];
 	todoForm: FormGroup;
 	eventSource = [];
   	viewTitle: string;
@@ -43,7 +44,8 @@ export class TimeManagerPage implements OnInit {
   	//@ViewChild(CalendarComponent) 
   	myCal: CalendarComponent;
 
-  	constructor(private formBuilder: FormBuilder, private todoService: TodoService, private alertCtrl: AlertController, @Inject(LOCALE_ID) private locale: string, private http : HttpClient) { }
+  	constructor(private formBuilder: FormBuilder, private todoService: TodoService, private alertCtrl: AlertController, @Inject(LOCALE_ID) private locale: string, private http : HttpClient) { 
+	  }
 
   	resetEvent() {
     this.event = {
@@ -133,14 +135,26 @@ export class TimeManagerPage implements OnInit {
 		this.todoForm = this.formBuilder.group({
 			title: ['', [Validators.required, Validators.minLength(1)]],
 			content: ['', [Validators.required, Validators.minLength(1)]],
-			deadline: ['', [Validators.required, Validators.minLength(1)]]
+			deadline: ['', []],
+			isDone: ['', []]
 		  });
+		this.getTodos();
   		this.http.get(this.url,{responseType: 'text'}).subscribe(data => this.edt=data);
 		this.resetEvent();
 	  }
 	  
 	  onSubmitTodo() {
 		this.todoService.addTodo(this.todoForm.value).subscribe();
+		this.getTodos();
 	  }
 
+	  getTodos(){
+		this.myTodos = [];
+		this.todoService.getTodos().subscribe(res => {
+			for (var j = 0; j < Object.values(res).length; j++) {
+				this.myTodos.push(Object.values(res)[j]['label']);
+			}
+	  });
+	  console.log(this.myTodos);
+	}
 }

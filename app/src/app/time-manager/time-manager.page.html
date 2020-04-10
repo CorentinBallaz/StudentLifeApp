@@ -114,10 +114,10 @@
                       <ion-datetime displayFormat="MM/DD/YYYY HH:mm" pickerFormat="MMM D:HH:mm" formControlName="deadline" [min]="minDate"></ion-datetime>
                     </ion-item>
 
-                    <!-- <ion-item>
+                    <ion-item>
                       <ion-label>Terminée</ion-label>
                       <ion-checkbox slot="end" formControlName="isDone"></ion-checkbox>
-                    </ion-item> -->
+                    </ion-item>
         
                     <ion-button shape="round" size="medium" expand="block" type="submit" [disabled]="!todoForm.valid">Add TODO</ion-button>
                   </div>
@@ -128,31 +128,20 @@
           </ion-card-content>
         </ion-card>
 
+
         <ion-card>
           <ion-card-header text-center>
-            <ion-card-title text-center>Create TODO</ion-card-title>
+            <ion-card-title>Mes TODO's</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <ion-grid>
-              <ion-row justify-content-center>
-                <ion-col align-self-center>
-                  <div padding>
-                    
-                    <ion-item>
-                      <ion-input placeholder="Title"></ion-input>
-                    </ion-item>
-            
-                    <ion-item>
-                      <ion-input placeholder="Content"></ion-input>
-                    </ion-item>
-        
-                    <ion-button shape="round" size="medium" expand="block" type="submit">Add TODO</ion-button>
-                  </div>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
+            <ion-list>
+              <ion-item *ngFor="let todoName of myTodos">
+                <ion-label>{{todoName}}</ion-label>
+              </ion-item>
+            </ion-list>
           </ion-card-content>
         </ion-card>
+
 
 
       </ion-col>
