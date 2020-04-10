@@ -107,7 +107,7 @@
                     </ion-item>
             
                     <ion-item>
-                      <ion-input formControlName="content" placeholder="Content"></ion-input>
+                      <ion-textarea formControlName="content" placeholder="Content"></ion-textarea>
                     </ion-item>
 
                     <ion-item>
@@ -115,11 +115,6 @@
                       <ion-datetime displayFormat="MM/DD/YYYY HH:mm" pickerFormat="MMM D:HH:mm" formControlName="deadline" [min]="minDate"></ion-datetime>
                     </ion-item>
 
-                    <ion-item>
-                      <ion-label>Terminée</ion-label>
-                      <ion-checkbox slot="end" formControlName="isDone"></ion-checkbox>
-                    </ion-item>
-        
                     <ion-button shape="round" size="medium" expand="block" type="submit" [disabled]="!todoForm.valid">Add TODO</ion-button>
                   </div>
                 </form>
@@ -136,9 +131,10 @@
           </ion-card-header>
           <ion-card-content>
             <ion-list>
-              <ion-item *ngFor="let todoName of myTodos">
+              <ion-item text-center *ngFor="let todo of myTodos">
+                <ion-label (click)='onTodoSelected(todo)'>{{todo.label}}</ion-label>
+                <ion-icon slot="end" name="create-outline"></ion-icon>
                 <ion-icon slot="end" name="trash-outline"></ion-icon>
-                <ion-label class="ion-text-wrap">{{todoName.label}}</ion-label>
               </ion-item>
             </ion-list>
           </ion-card-content>
