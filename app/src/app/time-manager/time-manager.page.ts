@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TodoService } from '../services/todo.service';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
+import { ScreensizeService } from '../services/screensize.service';
 
 import { HttpClient } from '@angular/common/http';
 
@@ -20,6 +21,7 @@ registerLocaleData(localeFr);
   styleUrls: ['./time-manager.page.scss'],
 })
 export class TimeManagerPage implements OnInit {
+	isDesktop: boolean;
 	myTodosFinished = [];
 	myTodosNotFinished = [];
 	todoForm: FormGroup;
@@ -47,7 +49,16 @@ export class TimeManagerPage implements OnInit {
   	@ViewChild(CalendarComponent,{static: false}) 
   	myCal: CalendarComponent;
 
-  	constructor(private formBuilder: FormBuilder, private todoService: TodoService, private alertCtrl: AlertController, @Inject(LOCALE_ID) private locale: string, private http : HttpClient, private adeService:AdeService) { }
+  	constructor(private formBuilder: FormBuilder, private todoService: TodoService, private alertCtrl: AlertController, @Inject(LOCALE_ID) private locale: string, private http : HttpClient, private adeService:AdeService, private screensizeService: ScreensizeService) {
+		this.screensizeService.isDesktopView().subscribe(isDesktop => {
+			if (this.isDesktop && !isDesktop) {
+			  // Reload because our routing is out of place
+			  window.location.reload();
+			}
+	   
+			this.isDesktop = isDesktop;
+		  });
+	   }
 
   	resetEvent() {
     this.event = {
