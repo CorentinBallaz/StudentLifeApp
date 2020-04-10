@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
+const Schema = mongoose.Schema;
 
 var UserSchema = new mongoose.Schema({
     email: {
@@ -18,7 +19,8 @@ var UserSchema = new mongoose.Schema({
     },
     year : {
         type:String,
-    }
+    },
+    todos : [{ type: Schema.ObjectId, ref: "Todo" }]
 });
 
 UserSchema.pre('save',  function(next) {

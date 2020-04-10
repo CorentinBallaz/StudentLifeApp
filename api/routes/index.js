@@ -19,20 +19,27 @@ routes.get('/special', passport.authenticate('jwt', { session: false }), (req, r
 routes.get('/email', passport.authenticate('jwt', { session: false }), (req, res) => {
     return res.json({ msg: req.user.email});
 });
-
+// ------------- Todos Request ------------------------------
 routes.post('/createTodo',(req,res)=>{
     todoController.createTodo(req,res)
 });
 
-routes.get('/getAde',(req,res)=>{
-	adeController.getEvents(req,res);
-});
-
-routes.get('/todos/:userMail',(req,res)=>{
+routes.get('/todos/:userID',(req,res)=>{
     todoController.getTodos(req,res);
 });
 routes.get('/todo/:userMail&:label',(req,res)=>{
     todoController.getTodo(req,res);
+});
+routes.delete('/todo/:userMail&:label',(req,res)=>{
+   todoController.deleteTodo(req,res);
+});
+
+routes.put('/todo/:userMail&:label',(req,res)=> {
+    todoController.updateTodo(req, res);
+});
+
+routes.get('/getAde',(req,res)=>{
+    adeController.getEvents(req,res);
 });
 
 module.exports = routes;
