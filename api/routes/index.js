@@ -39,7 +39,6 @@ routes.put('/todo/:userMail&:label',(req,res)=> {
 });
 
 routes.get('/getAde',(req,res)=>{
-    console.log("Request getAde");
     adeController.getEvents(req,res);
 });
 
