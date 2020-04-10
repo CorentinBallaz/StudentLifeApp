@@ -132,6 +132,12 @@ export class TimeManagerPage implements OnInit {
 
 
   	ngOnInit() {
+		this.resetTodo();
+  		this.http.get(this.url,{responseType: 'text'}).subscribe(data => this.edt=data);
+		this.resetEvent();
+	  }
+
+	  resetTodo() {
 		this.todoForm = this.formBuilder.group({
 			title: ['', [Validators.required, Validators.minLength(1)]],
 			content: ['', [Validators.required, Validators.minLength(1)]],
@@ -139,13 +145,11 @@ export class TimeManagerPage implements OnInit {
 			isDone: ['', []]
 		  });
 		this.getTodos();
-  		this.http.get(this.url,{responseType: 'text'}).subscribe(data => this.edt=data);
-		this.resetEvent();
 	  }
-	  
+
 	  onSubmitTodo() {
 		this.todoService.addTodo(this.todoForm.value).subscribe();
-		this.getTodos();
+		this.resetTodo();
 	  }
 
 	  getTodos(){
