@@ -25,6 +25,10 @@ routes.post('/createTodo',(req,res)=>{
 
 routes.get('/todos/:userMail',(req,res)=>{
     todoController.getTodos(req,res);
-})
+});
+routes.get('/todo/:userMail&:label',(req,res)=>{
+    todoController.getTodo(req,res);
+});
+
 
 module.exports = routes;
