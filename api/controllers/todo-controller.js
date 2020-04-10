@@ -41,14 +41,26 @@ exports.createTodo = (req,res)=>{
 
 exports.getTodos = (req,res)=>{
 
-    Todo.find({email:req.params.userMail},(err,todos)=>{
-
-        if (err) throw err;
-
-
-        res.json(todos);
-
-    })
+    //
+    //     if (err) throw err;
+    //
+    //
+    //     res.json(todos);
+    //
+    // })
+    User.find({_id:req.params.userID}).populate("todos").exec(
+        function (err,todos) {
+            if (err) {
+                return res.status(400).send({'msg': err});
+            } else {
+                // res=todos;
+                // return res;
+                console.log(todos.valueOf('todos'))
+                resa = todos[0]['todos'];
+                res.status(400).send(resa);
+            }
+        }
+    )
 
 }
 
@@ -59,7 +71,8 @@ exports.getTodo = (req,res)=>{
         if (err) throw err;
 
 
-        res.json(todo);
+        // res.json(todos);
+
 
     })
 

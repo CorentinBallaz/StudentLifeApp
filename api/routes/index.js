@@ -24,7 +24,7 @@ routes.post('/createTodo',(req,res)=>{
     todoController.createTodo(req,res)
 });
 
-routes.get('/todos/:userMail',(req,res)=>{
+routes.get('/todos/:userID',(req,res)=>{
     todoController.getTodos(req,res);
 });
 routes.get('/todo/:userMail&:label',(req,res)=>{
