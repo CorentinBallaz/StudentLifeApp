@@ -37,7 +37,8 @@ export class TimeManagerPage implements OnInit {
     	desc: '',
 	    startTime: '',
 	    endTime: '',
-	    allDay: false
+	    allDay: false,
+	    occurence:''
   	};
 
   	minDate = new Date().toISOString();
@@ -53,7 +54,8 @@ export class TimeManagerPage implements OnInit {
       	desc: '',
       	startTime: new Date().toISOString(),
       	endTime: new Date().toISOString(),
-      	allDay: false
+      	allDay: false,
+      	occurence:''
     };
   }
  
@@ -65,7 +67,8 @@ export class TimeManagerPage implements OnInit {
           startTime:new Date(element.startTime),
           endTime:new Date(element.endTime),
           allDay:false,
-          desc:element.description
+          desc:element.description,
+          occurence:element.occurence
         }
         this.eventSource.push(event);
         this.resetEvent();
