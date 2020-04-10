@@ -8,6 +8,8 @@ import localeFr from '@angular/common/locales/fr';
 
 import { HttpClient } from '@angular/common/http';
 
+import { AdeService } from '../services/ade.service'
+
 
 registerLocaleData(localeFr);
 
@@ -19,10 +21,9 @@ registerLocaleData(localeFr);
 export class TimeManagerPage implements OnInit {
 
 	eventSource = [];
-  	viewTitle: string;
-  	selectedDay = new Date();
-  	url = 'http://ade6-usmb-ro.grenet.fr/jsp/custom/modules/plannings/direct_cal.jsp?resources=2393&projectId=1&calType=ical&login=iCalExport&password=73rosav&lastDate=2030-08-14';
-  	edt;
+  viewTitle: string;
+  selectedDay = new Date();
+
 	calendar = {
     	mode: 'week',
     	currentDate: new Date(),
@@ -39,10 +40,10 @@ export class TimeManagerPage implements OnInit {
 
   	minDate = new Date().toISOString();
 
-  	//@ViewChild(CalendarComponent) 
+  	@ViewChild(CalendarComponent) 
   	myCal: CalendarComponent;
 
-  	constructor(private alertCtrl: AlertController, @Inject(LOCALE_ID) private locale: string, private http : HttpClient) { }
+  	constructor(private alertCtrl: AlertController, @Inject(LOCALE_ID) private locale: string, private http : HttpClient, private service:AdeService) { }
 
   	resetEvent() {
     this.event = {
@@ -54,6 +55,22 @@ export class TimeManagerPage implements OnInit {
     };
   }
  
+    buildAndPushEvent(data) {
+      data.events.forEach(element => {
+        console.log(element);
+
+        let event={
+          title:element.title,
+          startTime:new Date(element.startTime),
+          endTime:new Date(element.endTime),
+          allDay:false,
+          desc:element.description
+        }
+        this.eventSource.push(event);
+        this.resetEvent();
+        })
+      this.myCal.loadEvents();
+    }
   // Create the right event format and reload source
   	addEvent() {
     	let eventCopy = {
@@ -129,9 +146,10 @@ export class TimeManagerPage implements OnInit {
 
 
   	ngOnInit() {
-  		this.http.get(this.url,{responseType: 'text'}).subscribe(data => this.edt=data);
   		this.resetEvent();
-
-  	}
+      this.service.getAde().then(res => { 
+        this.buildAndPushEvent(res);
+  	})
+    }
 
 }

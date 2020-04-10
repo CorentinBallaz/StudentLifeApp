@@ -3,6 +3,7 @@ var   routes          = express.Router();
 var userController  = require('../controllers/user-controller');
 var passport	    = require('passport');
 var todoController  = require('../controllers/todo-controller');
+var adeController = require('../controllers/ade-controller');
 
 
 routes.get('/', (req, res) => {
@@ -18,6 +19,11 @@ routes.get('/special', passport.authenticate('jwt', { session: false }), (req, r
 
 routes.post('/createTodo',(req,res)=>{
     todoController.createTodo(req,res)
+});
+
+routes.get('/getAde',(req,res)=>{
+	console.log("Request getAde");
+	adeController.getEvents(req,res);
 });
 
 module.exports = routes;
