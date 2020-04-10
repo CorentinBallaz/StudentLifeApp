@@ -20,7 +20,8 @@ registerLocaleData(localeFr);
   styleUrls: ['./time-manager.page.scss'],
 })
 export class TimeManagerPage implements OnInit {
-	myTodos = [];
+	myTodosFinished = [];
+	myTodosNotFinished = [];
 	todoForm: FormGroup;
 	eventSource = [];
   viewTitle: string;
@@ -162,11 +163,17 @@ export class TimeManagerPage implements OnInit {
 	  }
 
 	  getTodos(){
-		this.myTodos = [];
+		this.myTodosFinished = [];
+		this.myTodosNotFinished = [];
 		this.todoService.getTodos().subscribe(res => {
 			for (var j = 0; j < Object.values(res).length; j++) {
-				var currentJson = {id:Object.values(res)[j]["_id"], label:Object.values(res)[j]['label'], content:Object.values(res)[j]["content"], deadline:Object.values(res)[j]["deadline"]};
-				this.myTodos.push(currentJson);
+				var currentJson = {id:Object.values(res)[j]["_id"], label:Object.values(res)[j]['label'], content:Object.values(res)[j]["content"], deadline:Object.values(res)[j]["deadline"], isDone:Object.values(res)["isDone"]};
+				if(Object.values(res)["isDone"] === true){
+					this.myTodosFinished.push(currentJson);
+				}else{
+					console.log("notFinished");
+					this.myTodosNotFinished.push(currentJson);
+				}
 			}
 	  });
 	}
@@ -179,7 +186,17 @@ export class TimeManagerPage implements OnInit {
 			header: todo.label,
 			subHeader: todo.content,
 			message: 'Deadline: ' + start,
-			buttons: ['OK']
+			buttons: [{
+				text: 'Ok',
+				role: 'cancel',
+			  },
+			  {
+				text: 'Done',
+				handler: () => {
+				//aller chercher dans la bdd et modifier l'état
+				this.getTodos();
+				}
+			  }]
 				});
 			alert.present();
 	  }
