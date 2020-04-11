@@ -63,25 +63,47 @@ exports.getTodos = (req,res)=>{
 
 exports.getTodo = (req,res)=>{
 
-    Todo.find({email:req.params.userMail,label:req.params.label},(err,todo)=>{
 
-        if (err) throw err;
+    // User.find({_id:req.params.userID}).populate("todos").exec(
+    //     function (err,todos) {
+    //         if (err) {
+    //             return res.status(400).send({'msg': err});
+    //         } else {
+    //             resTemp = todos[0]['todos'];
+    //             // res.status(200).send(resa);
+    //             resTemp.forEach(tuple =>{
+    //                 if (tuple['label'] == req.params.label){
+    //                     return res.status(200).send(tuple)
+    //                 }
+    //                 }
+    //
+    //             )
+    //         }
+    //     }
+    // )
+    User.find({_id:req.params.userID}).populate({path :"todos",match: {_id:req.params.todoID}}).exec(
+        function (err,todo){
 
+            if (err) throw err;
+            var leTodo = todo[0]['todos'][0];
+            return res.status(200).send(leTodo)
+        }
 
-        // res.json(todos);
-
-
-    })
+    )
 
 };
 
+
 exports.deleteTodo = (req,res)=>{
-    Todo.findOneAndRemove({email : req.params.userMail,label: req.params.label},(err,todo)=>{
-        if (err) throw err;
+   User.findOneAndRemove({_id:req.params.userID}).populate({path :"todos",match: {_id:req.params.todoID}}).exec(
+       function (err,todo){
 
-        res.json({info: 'Success'});
+           if (err) throw err;
+           // var leTodo = todo[0]['todos'][0];
+           return res.status(200).send(todo)
+       }
 
-    })
+   )
 };
 
 
