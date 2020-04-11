@@ -95,16 +95,23 @@ exports.getTodo = (req,res)=>{
 
 
 exports.deleteTodo = (req,res)=>{
-   User.findOneAndRemove({_id:req.params.userID}).populate({path :"todos",match: {_id:req.params.todoID}}).exec(
-       function (err,todo){
 
-           if (err) throw err;
-           // var leTodo = todo[0]['todos'][0];
-           return res.status(200).send(todo)
-       }
+    User.update({_id:req.params.userID},{$pull : {todos :req.params.todoID}}).exec( function (err,resa) {
+        if (err) throw err;
 
-   )
+        Todo.remove({_id: req.params.todoID}).exec(function (err1,resT) {
+            if (err) throw err1;
+
+            res.status(200).send("Todo deleted")
+        })
+    })
+
+
 };
 
-
+// exports.updateTodo = (req,res)=>{
+//     Todo.update({_id;req.params.userID})
+// };
+//
+//
 
