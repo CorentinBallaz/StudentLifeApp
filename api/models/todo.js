@@ -21,7 +21,7 @@ var TodoSchema = new mongoose.Schema({
         },
         isDone:{
             type:Boolean,
-            default:true
+            default:false
         }
 })
 module.exports = mongoose.model('Todo', TodoSchema);

@@ -27,10 +27,10 @@ routes.post('/createTodo',(req,res)=>{
 routes.get('/todos/:userID',(req,res)=>{
     todoController.getTodos(req,res);
 });
-routes.get('/todo/:userMail&:label',(req,res)=>{
+routes.get('/todo/:userID&:todoID',(req,res)=>{
     todoController.getTodo(req,res);
 });
-routes.delete('/todo/:userMail&:label',(req,res)=>{
+routes.delete('/todo/:userID&:todoID',(req,res)=>{
    todoController.deleteTodo(req,res);
 });
 
