@@ -95,14 +95,14 @@ exports.getTodo = (req,res)=>{
 
 
 exports.deleteTodo = (req,res)=>{
-
+    console.log("passé dans delete");
     User.update({_id:req.params.userID},{$pull : {todos :req.params.todoID}}).exec( function (err,resa) {
         if (err) throw err;
 
         Todo.remove({_id: req.params.todoID}).exec(function (err1,resT) {
             if (err) throw err1;
 
-            res.status(200).send("Todo deleted")
+            //res.status(200).send("Todo deleted")
         })
     })
 

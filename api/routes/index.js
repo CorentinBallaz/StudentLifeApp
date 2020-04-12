@@ -31,6 +31,7 @@ routes.get('/todo/:userID&:todoID',(req,res)=>{
     todoController.getTodo(req,res);
 });
 routes.delete('/todo/:userID&:todoID',(req,res)=>{
+    console.log("passé ici");
    todoController.deleteTodo(req,res);
 });
 

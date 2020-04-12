@@ -159,30 +159,29 @@ export class TimeManagerPage implements OnInit {
   		this.event.endTime = (selected.toISOString());
 	}
 
-	  resetTodo() {
+	  async resetTodo() {
 		this.todoForm = this.formBuilder.group({
 			title: ['', [Validators.required, Validators.minLength(1)]],
 			content: ['', [Validators.required, Validators.minLength(1)]],
 			deadline: ['', []],
 		  });
-		this.getTodos();
+		await this.getTodos();
 	  }
 
-	  onSubmitTodo() {
+	  async onSubmitTodo() {
 		this.todoService.addTodo(this.todoForm.value).subscribe();
-		this.resetTodo();
+		await this.resetTodo();
 	  }
 
-	  getTodos(){
+	  async getTodos(){
 		this.myTodosFinished = [];
 		this.myTodosNotFinished = [];
-		this.todoService.getTodos().subscribe(res => {
+		await this.todoService.getTodos().subscribe(res => {
 			for (var j = 0; j < Object.values(res).length; j++) {
 				var currentJson = {id:Object.values(res)[j]["_id"], label:Object.values(res)[j]['label'], content:Object.values(res)[j]["content"], deadline:Object.values(res)[j]["deadline"], isDone:Object.values(res)["isDone"]};
 				if(Object.values(res)["isDone"] === true){
 					this.myTodosFinished.push(currentJson);
 				}else{
-					console.log("notFinished");
 					this.myTodosNotFinished.push(currentJson);
 				}
 			}
@@ -190,24 +189,15 @@ export class TimeManagerPage implements OnInit {
 	}
 
 	async onTodoSelected(todo) {
+		console.log(todo);
 		// Use Angular date pipe for conversion
 			let start = formatDate(todo.deadline, 'medium', this.locale);
 	   
 			const alert = await this.alertCtrl.create({
 			header: todo.label,
 			subHeader: todo.content,
-			message: 'Deadline: ' + start,
-			buttons: [{
-				text: 'Ok',
-				role: 'cancel',
-			  },
-			  {
-				text: 'Done',
-				handler: () => {
-				//aller chercher dans la bdd et modifier l'état
-				this.getTodos();
-				}
-			  }]
+			message: 'Deadline: ' + start + '\n State: ' + todo.isDone,
+			buttons: ['Ok']
 				});
 			alert.present();
 	  }
@@ -216,12 +206,27 @@ export class TimeManagerPage implements OnInit {
 		  this.todoService.logout();
 	  }
 
-	  modifiateTodo(todo){
+	  async modifiateTodo(todo){
 		  console.log(todo);
 	  }
 
-	  deleteTodo(todo){
-		  this.todoService.deleteTodo(todo.id);
+	  async deleteTodo(todo){
+		const alert = await this.alertCtrl.create({
+			header: "Confirmation to delete",
+			message: "Are you sure to delete ?",
+			buttons: [{
+				text: 'Yes',
+				handler: () => {
+				this.todoService.deleteTodo(todo.id);
+				this.getTodos();
+				}
+			  },
+			  {
+				text: 'Cancel',
+				role: 'cancel',
+			  }]
+				});
+			alert.present();
 	  }
 
   ngOnInit() {

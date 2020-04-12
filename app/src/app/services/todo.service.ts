@@ -26,6 +26,7 @@ export class TodoService {
   }
 
   getTodos(){
+    this.authService.checkToken();
     const userID = this.authService.user['id'];
     return this.http.get(`${this.url}/api/todos/${userID}`).pipe(
       catchError(e => {
@@ -37,6 +38,18 @@ export class TodoService {
 
   logout(){
     this.authService.logout();
+  }
+
+  deleteTodo(id_todo){
+    const userID = this.authService.user['id'];
+    var Json={userID: userID, todoID: id_todo};
+    console.log(`${this.url}/api/todo/${userID}&${id_todo}`);
+    return this.http.delete(`${this.url}/api/todo/${userID}&${id_todo}`).subscribe(
+      catchError(e => {
+        this.showAlert(e.error.msg);
+        throw new Error(e);
+      })
+    );
   }
 
   showAlert(msg) {
