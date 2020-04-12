@@ -163,10 +163,14 @@
           </ion-card-header>
           <ion-card-content>
             <ion-list>
-              <ion-item text-center *ngFor="let todo of myTodosNotFinished">
-                <ion-label (click)='onTodoSelected(todo)'>{{todo.label}}</ion-label>
-                <ion-icon slot="end" name="create-outline"></ion-icon>
-                <ion-icon slot="end" name="trash-outline"></ion-icon>
+              <ion-item *ngFor="let todo of myTodosNotFinished">
+                <ion-label ion-button (click) ='onTodoSelected(todo)' class="label-todo">{{todo.label}}</ion-label>
+                <ion-button class="button-todo" fill="clear" (click) ="modifiateTodo()">
+                  <ion-icon class="icon-todo" name="create-outline"></ion-icon>
+                </ion-button>
+                <ion-button class="button-todo" fill="clear" (click) ="modifiateTodo()">
+                  <ion-icon class="icon-todo" name="trash-outline"></ion-icon>
+                </ion-button>
               </ion-item>
             </ion-list>
           </ion-card-content>
@@ -180,7 +184,7 @@
             <ion-list>
               <ion-item text-center *ngFor="let todo of myTodosFinished">
                 <ion-label (click)='onTodoSelected(todo)'>{{todo.label}}</ion-label>
-                <ion-icon slot="end" name="create-outline"></ion-icon>
+                <ion-icon ion-button slot="end" name="create-outline"></ion-icon>
                 <ion-icon slot="end" name="trash-outline"></ion-icon>
               </ion-item>
             </ion-list>
@@ -192,4 +196,5 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+  
 </ion-content>

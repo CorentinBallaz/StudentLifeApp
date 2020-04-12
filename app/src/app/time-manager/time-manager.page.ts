@@ -212,6 +212,18 @@ export class TimeManagerPage implements OnInit {
 			alert.present();
 	  }
 
+	  logout(){
+		  this.todoService.logout();
+	  }
+
+	  modifiateTodo(todo){
+		  console.log(todo);
+	  }
+
+	  deleteTodo(todo){
+		  this.todoService.deleteTodo(todo.id);
+	  }
+
   ngOnInit() {
         this.resetEvent();
         this.resetTodo();

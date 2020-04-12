@@ -3,6 +3,25 @@ ion-button {
     font-weight: 200;
 }
 
+.label-todo{
+  font-size:20px;
+  color: black;
+}
+
+.button-todo{
+  position:relative;
+  margin-bottom:15px;
+  width: 40px;
+  height: 40px;
+  background-color: white;
+
+}
+.icon-todo{
+  width: 40px;
+  height: 40px;
+  color: #696969;
+}
+
 ion-header {
     ion-button {
         margin-top: 10px;

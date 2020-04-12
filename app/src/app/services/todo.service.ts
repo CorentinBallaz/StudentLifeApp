@@ -35,6 +35,10 @@ export class TodoService {
     );
   }
 
+  logout(){
+    this.authService.logout();
+  }
+
   showAlert(msg) {
     let alert = this.alertController.create({
       message: msg,
