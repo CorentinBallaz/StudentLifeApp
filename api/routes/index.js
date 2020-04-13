@@ -35,7 +35,7 @@ routes.delete('/todo/:userID&:todoID',(req,res)=>{
    todoController.deleteTodo(req,res);
 });
 
-routes.put('/todo/:userMail&:label',(req,res)=> {
+routes.put('/todo/:todoID',(req,res)=> {
     todoController.updateTodo(req, res);
 });
 
