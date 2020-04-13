@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit, Inject, LOCALE_ID } from '@angular/core';
 import { CalendarComponent } from 'ionic2-calendar/calendar';
-import { AlertController } from '@ionic/angular';
+import { NavController, AlertController } from '@ionic/angular';
 import { formatDate } from '@angular/common';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TodoService } from '../services/todo.service';
@@ -178,8 +178,9 @@ export class TimeManagerPage implements OnInit {
 		this.myTodosNotFinished = [];
 		await this.todoService.getTodos().subscribe(res => {
 			for (var j = 0; j < Object.values(res).length; j++) {
-				var currentJson = {id:Object.values(res)[j]["_id"], label:Object.values(res)[j]['label'], content:Object.values(res)[j]["content"], deadline:Object.values(res)[j]["deadline"], isDone:Object.values(res)["isDone"]};
-				if(Object.values(res)["isDone"] === true){
+				console.log(Object.values(res)[j]);
+				var currentJson = {id:Object.values(res)[j]["_id"], label:Object.values(res)[j]['label'], content:Object.values(res)[j]["content"], deadline:Object.values(res)[j]["deadline"], isDone:Object.values(res)[j]["isDone"]};
+				if(Object.values(res)[j]["isDone"] === true){
 					this.myTodosFinished.push(currentJson);
 				}else{
 					this.myTodosNotFinished.push(currentJson);
@@ -207,7 +208,47 @@ export class TimeManagerPage implements OnInit {
 	  }
 
 	  async modifiateTodo(todo){
-		  console.log(todo);
+		var modifiate = false;
+		const alert = await this.alertCtrl.create({
+			header: todo.label,
+			message: "Add your modification here",
+			inputs:[{
+				type:"text",
+				name:"label",
+				value:todo.label
+			},
+			{
+				type:"textarea",
+				name:"content",
+				value:todo.content
+			},
+			{
+				type:"checkbox",
+				name:"isDone",
+			}],
+			buttons: [{
+				text: 'Yes',
+				handler: () => {
+					modifiate = true;
+				}
+			  },
+			  {
+				text: 'Cancel',
+				role: 'cancel',
+			  }]
+				});
+			alert.present();
+			let result = await alert.onDidDismiss();
+			if(modifiate){
+				if(result["data"]["values"]["isDone"] === "on"){
+					result["data"]["values"]["isDone"] = "true";
+				}
+				else{
+					result["data"]["values"]["isDone"] = "false";
+				}
+				this.todoService.modifiateTodo(todo.id,result["data"]["values"]);
+				this.getTodos();				
+			}
 	  }
 
 	  async deleteTodo(todo){

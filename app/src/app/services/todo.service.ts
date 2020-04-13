@@ -16,7 +16,7 @@ export class TodoService {
    }
 
   addTodo(credentials) {
-    var Json = {idUser:this.authService.user['id'], label:credentials['title'],content:credentials['content'],deadline:credentials['deadline']};
+    var Json = {idUser:this.authService.user['id'], label:credentials['title'],content:credentials['content'],deadline:credentials['deadline'],isDone:false};
     return this.http.post(`${this.url}/api/createTodo`,Json).pipe(
       catchError(e => {
         this.showAlert(e.error.msg);
@@ -38,6 +38,17 @@ export class TodoService {
 
   logout(){
     this.authService.logout();
+  }
+
+  modifiateTodo(id_todo,credentials){
+    console.log(credentials);
+    var Json = {label:credentials['label'],content:credentials['content'],isDone:credentials['isDone']};
+    return this.http.put(`${this.url}/api/todo/${id_todo}`,Json).subscribe(
+      catchError(e => {
+        this.showAlert(e.error.msg);
+        throw new Error(e);
+      })
+    );
   }
 
   deleteTodo(id_todo){
