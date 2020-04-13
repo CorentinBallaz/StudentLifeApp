@@ -109,9 +109,13 @@ exports.deleteTodo = (req,res)=>{
 
 };
 
-// exports.updateTodo = (req,res)=>{
-//     Todo.update({_id;req.params.userID})
-// };
-//
-//
+exports.updateTodo = (req,res)=>{
+    Todo.findByIdAndUpdate(req.params.todoID,req.body,{new: true},function (err,todo) {
+        if (err) throw err;
+
+        res.status(200).send(todo);
+    })
+};
+
+
 
