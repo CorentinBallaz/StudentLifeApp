@@ -120,7 +120,22 @@
       </ion-col>
 
 
-      <ion-col size="3">
+      <ion-col size="3"> 
+        <ion-card>
+          <ion-card-header text-center>
+            <ion-card-title>Insights TODO</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-label class="insights-todo-title">TASK DONE</ion-label>
+            <ion-label class="progression">{{progressionString}}%</ion-label>
+            <ion-progress-bar value={{progression}}></ion-progress-bar>
+            <ion-label class="insights-todo-title">TODO Catégories</ion-label>
+            <canvas #barChart height="250"></canvas>
+          </ion-card-content>
+        </ion-card>
+          
+
+
 
 
         <ion-card>
@@ -145,6 +160,15 @@
                     <ion-item>
                       <ion-label>Deadline</ion-label>
                       <ion-datetime displayFormat="MM/DD/YYYY HH:mm" pickerFormat="MMM D:HH:mm" formControlName="deadline" [min]="minDate"></ion-datetime>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label>Catégorie</ion-label>
+                      <ion-select formControlName="categorie">
+                        <ion-select-option>Révision</ion-select-option>
+                        <ion-select-option>Travail à finir</ion-select-option>
+                        <ion-select-option>Autre</ion-select-option>
+                      </ion-select>
                     </ion-item>
 
                     <ion-button shape="round" size="medium" expand="block" type="submit" [disabled]="!todoForm.valid">Add TODO</ion-button>

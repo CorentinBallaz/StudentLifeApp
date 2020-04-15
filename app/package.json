@@ -14,7 +14,7 @@
   "private": true,
   "dependencies": {
     "@angular/common": "~8.2.14",
-    "@angular/core": "~8.2.14",
+    "@angular/core": "^8.2.14",
     "@angular/forms": "~8.2.14",
     "@angular/platform-browser": "~8.2.14",
     "@angular/platform-browser-dynamic": "~8.2.14",
@@ -27,9 +27,11 @@
     "@ionic/angular": "^5.0.0",
     "@ionic/core": "^5.0.0-rc.5",
     "@ionic/storage": "^2.2.0",
+    "chart.js": "^2.9.3",
     "cordova-sqlite-storage": "^5.0.0",
     "core-js": "^2.5.4",
     "ionic2-calendar": "^0.5.9",
+    "ng2-charts": "^2.3.0",
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"

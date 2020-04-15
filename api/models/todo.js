@@ -19,6 +19,10 @@ var TodoSchema = new mongoose.Schema({
             type : Date
 
         },
+        categorie :{
+            type:String,
+            required : true
+        },
         isDone:{
             type:Boolean
         }
