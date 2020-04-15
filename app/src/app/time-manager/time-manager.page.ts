@@ -7,9 +7,8 @@ import { TodoService } from '../services/todo.service';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { ScreensizeService } from '../services/screensize.service';
-
 import { HttpClient } from '@angular/common/http';
-
+import { Chart } from 'chart.js'
 import { AdeService } from '../services/ade.service'
 
 
@@ -21,6 +20,10 @@ registerLocaleData(localeFr);
   styleUrls: ['./time-manager.page.scss'],
 })
 export class TimeManagerPage implements OnInit {
+	progression: number;
+	progressionString: any;
+	bars: any;
+  	colorArray: any;
 	isDesktop: boolean;
 	myTodosFinished = [];
 	myTodosNotFinished = [];
@@ -186,6 +189,7 @@ export class TimeManagerPage implements OnInit {
 		this.todoForm = this.formBuilder.group({
 			title: ['', [Validators.required, Validators.minLength(1)]],
 			content: ['', [Validators.required, Validators.minLength(1)]],
+			categorie: ['', [Validators.required, Validators.minLength(1)]],
 			deadline: ['', []],
 		  });
 		await this.getTodos();
@@ -202,13 +206,19 @@ export class TimeManagerPage implements OnInit {
 		await this.todoService.getTodos().subscribe(res => {
 			for (var j = 0; j < Object.values(res).length; j++) {
 				console.log(Object.values(res)[j]);
-				var currentJson = {id:Object.values(res)[j]["_id"], label:Object.values(res)[j]['label'], content:Object.values(res)[j]["content"], deadline:Object.values(res)[j]["deadline"], isDone:Object.values(res)[j]["isDone"]};
+				var currentJson = {id:Object.values(res)[j]["_id"], label:Object.values(res)[j]['label'], content:Object.values(res)[j]["content"], deadline:Object.values(res)[j]["deadline"], categorie:Object.values(res)[j]["categorie"], isDone:Object.values(res)[j]["isDone"]};
 				if(Object.values(res)[j]["isDone"] === true){
 					this.myTodosFinished.push(currentJson);
 				}else{
 					this.myTodosNotFinished.push(currentJson);
 				}
 			}
+			this.progression = this.myTodosFinished.length/(this.myTodosFinished.length+this.myTodosNotFinished.length);
+			this.progressionString = (this.progression*100).toFixed(2);
+			if(this.progressionString === "NaN"){
+				this.progressionString = 0;
+			}
+			this.createBarChart();
 	  });
 	}
 
@@ -219,7 +229,7 @@ export class TimeManagerPage implements OnInit {
 	   
 			const alert = await this.alertCtrl.create({
 			header: todo.label,
-			subHeader: todo.content,
+			subHeader: todo.content + ' , ' + todo.categorie,
 			message: 'Deadline: ' + start + '\n State: ' + todo.isDone,
 			buttons: ['Ok']
 				});
@@ -291,6 +301,44 @@ export class TimeManagerPage implements OnInit {
 			  }]
 				});
 			alert.present();
+	  }
+
+	  @ViewChild('barChart',{static: false}) barChart;
+
+	  createBarChart() {
+		const allTodos = this.myTodosFinished.concat(this.myTodosNotFinished);
+		var allLabels = [];
+		var nbData = [];
+		for(var i=0;i<allTodos.length;i++){
+			if(!allLabels.includes(allTodos[i]["categorie"])){
+				allLabels.push(allTodos[i]["categorie"]);
+				nbData.push(0);
+			}
+			var index = allLabels.indexOf(allTodos[i]["categorie"]);
+			nbData[index] = nbData[index] + 1;
+		}
+		this.bars = new Chart(this.barChart.nativeElement, {
+		  type: 'bar',
+		  data: {
+			labels: allLabels,
+			datasets: [{
+			  label: 'Nb of todos',
+			  data: nbData,
+			  backgroundColor: ['rgb(38, 194, 129)','rgb(38, 70, 200)','rgb(200, 115, 17)'], // array should have same number of elements as number of dataset
+			  borderColor: ['rgb(38, 194, 129)','rgb(38, 70, 200)','rgb(200, 115, 17)'],// array should have same number of elements as number of dataset
+			  borderWidth: -10
+			}]
+		  },
+		  options: {
+			scales: {
+			  yAxes: [{
+				ticks: {
+				  beginAtZero: true
+				}
+			  }]
+			}
+		  }
+		});
 	  }
 
   ngOnInit() {

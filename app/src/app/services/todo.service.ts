@@ -16,7 +16,7 @@ export class TodoService {
    }
 
   addTodo(credentials) {
-    var Json = {idUser:this.authService.user['id'], label:credentials['title'],content:credentials['content'],deadline:credentials['deadline'],isDone:false};
+    var Json = {idUser:this.authService.user['id'], label:credentials['title'],content:credentials['content'],deadline:credentials['deadline'],categorie:credentials['categorie'],isDone:false};
     return this.http.post(`${this.url}/api/createTodo`,Json).pipe(
       catchError(e => {
         this.showAlert(e.error.msg);
