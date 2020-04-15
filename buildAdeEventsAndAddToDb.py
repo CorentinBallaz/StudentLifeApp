@@ -25,8 +25,8 @@ eventCollection = db.eventades # On sélectionne la collection users
 
 adeCollection = db.ades
 
-db.eventCollection.drop()
-db.adeCollection.drop()
+eventCollection.drop()
+adeCollection.drop()
 
 idu4url = "http://ade6-usmb-ro.grenet.fr/jsp/custom/modules/plannings/direct_cal.jsp?resources=2393&projectId=1&calType=ical&login=iCalExport&password=73rosav&lastDate=2030-08-14&firstDate=2019-01-01"
 

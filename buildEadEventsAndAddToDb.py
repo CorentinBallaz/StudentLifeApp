@@ -25,8 +25,8 @@ eventCollection = db.eventeads # On sélectionne la collection users
 eadCollection = db.eads
 
 
-db.eventCollection.drop()
-db.eadCollection.drop()
+eventCollection.drop()
+eadCollection.drop()
 
 eadIdu4Url = "http://ead-polytech.univ-savoie.fr/calendar/export_execute.php?userid=2813&authtoken=13051bf49a4754ed93c5616725899bbd1030002c&preset_what=all&preset_time=recentupcoming"
 
