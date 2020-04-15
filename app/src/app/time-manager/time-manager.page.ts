@@ -1,12 +1,16 @@
 import { Component, ViewChild, OnInit, Inject, LOCALE_ID } from '@angular/core';
 import { CalendarComponent } from 'ionic2-calendar/calendar';
-import { AlertController } from '@ionic/angular';
+import { NavController, AlertController } from '@ionic/angular';
 import { formatDate } from '@angular/common';
-
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { TodoService } from '../services/todo.service';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
+import { ScreensizeService } from '../services/screensize.service';
 
 import { HttpClient } from '@angular/common/http';
+
+import { AdeService } from '../services/ade.service'
 
 
 registerLocaleData(localeFr);
@@ -17,12 +21,14 @@ registerLocaleData(localeFr);
   styleUrls: ['./time-manager.page.scss'],
 })
 export class TimeManagerPage implements OnInit {
-
+	isDesktop: boolean;
+	myTodosFinished = [];
+	myTodosNotFinished = [];
+	todoForm: FormGroup;
 	eventSource = [];
-  	viewTitle: string;
-  	selectedDay = new Date();
-  	url = 'http://ade6-usmb-ro.grenet.fr/jsp/custom/modules/plannings/direct_cal.jsp?resources=2393&projectId=1&calType=ical&login=iCalExport&password=73rosav&lastDate=2030-08-14';
-  	edt;
+  viewTitle: string;
+  selectedDay = new Date();
+
 	calendar = {
     	mode: 'week',
     	currentDate: new Date(),
@@ -34,15 +40,25 @@ export class TimeManagerPage implements OnInit {
     	desc: '',
 	    startTime: '',
 	    endTime: '',
-	    allDay: false
+	    allDay: false,
+	    occurence:''
   	};
 
   	minDate = new Date().toISOString();
 
-  	//@ViewChild(CalendarComponent) 
+  	@ViewChild(CalendarComponent,{static: false}) 
   	myCal: CalendarComponent;
 
-  	constructor(private alertCtrl: AlertController, @Inject(LOCALE_ID) private locale: string, private http : HttpClient) { }
+  	constructor(private formBuilder: FormBuilder, private todoService: TodoService, private alertCtrl: AlertController, @Inject(LOCALE_ID) private locale: string, private http : HttpClient, private adeService:AdeService, private screensizeService: ScreensizeService) {
+		this.screensizeService.isDesktopView().subscribe(isDesktop => {
+			if (this.isDesktop && !isDesktop) {
+			  // Reload because our routing is out of place
+			  window.location.reload();
+			}
+	   
+			this.isDesktop = isDesktop;
+		  });
+	   }
 
   	resetEvent() {
     this.event = {
@@ -50,10 +66,27 @@ export class TimeManagerPage implements OnInit {
       	desc: '',
       	startTime: new Date().toISOString(),
       	endTime: new Date().toISOString(),
-      	allDay: false
+      	allDay: false,
+      	occurence:''
     };
   }
  
+    buildAndPushEvent(data) {
+      data.events.forEach(element => {
+
+        let event={
+          title:element.title,
+          startTime:new Date(element.startTime),
+          endTime:new Date(element.endTime),
+          allDay:false,
+          desc:element.description,
+          occurence:element.occurence
+        }
+        this.eventSource.push(event);
+        this.resetEvent();
+        })
+      this.myCal.loadEvents();
+    }
   // Create the right event format and reload source
   	addEvent() {
     	let eventCopy = {
@@ -96,7 +129,6 @@ export class TimeManagerPage implements OnInit {
 // Focus today
 	today() {
   		this.calendar.currentDate = new Date();
-  		console.log(this.edt);
 	}
  
 // Selected date reange and hence title changed
@@ -127,11 +159,122 @@ export class TimeManagerPage implements OnInit {
   		this.event.endTime = (selected.toISOString());
 	}
 
+	  async resetTodo() {
+		this.todoForm = this.formBuilder.group({
+			title: ['', [Validators.required, Validators.minLength(1)]],
+			content: ['', [Validators.required, Validators.minLength(1)]],
+			deadline: ['', []],
+		  });
+		await this.getTodos();
+	  }
 
-  	ngOnInit() {
-  		this.http.get(this.url,{responseType: 'text'}).subscribe(data => this.edt=data);
-  		this.resetEvent();
+	  async onSubmitTodo() {
+		this.todoService.addTodo(this.todoForm.value).subscribe();
+		await this.resetTodo();
+	  }
 
-  	}
+	  async getTodos(){
+		this.myTodosFinished = [];
+		this.myTodosNotFinished = [];
+		await this.todoService.getTodos().subscribe(res => {
+			for (var j = 0; j < Object.values(res).length; j++) {
+				console.log(Object.values(res)[j]);
+				var currentJson = {id:Object.values(res)[j]["_id"], label:Object.values(res)[j]['label'], content:Object.values(res)[j]["content"], deadline:Object.values(res)[j]["deadline"], isDone:Object.values(res)[j]["isDone"]};
+				if(Object.values(res)[j]["isDone"] === true){
+					this.myTodosFinished.push(currentJson);
+				}else{
+					this.myTodosNotFinished.push(currentJson);
+				}
+			}
+	  });
+	}
 
+	async onTodoSelected(todo) {
+		console.log(todo);
+		// Use Angular date pipe for conversion
+			let start = formatDate(todo.deadline, 'medium', this.locale);
+	   
+			const alert = await this.alertCtrl.create({
+			header: todo.label,
+			subHeader: todo.content,
+			message: 'Deadline: ' + start + '\n State: ' + todo.isDone,
+			buttons: ['Ok']
+				});
+			alert.present();
+	  }
+
+	  logout(){
+		  this.todoService.logout();
+	  }
+
+	  async modifiateTodo(todo){
+		var modifiate = false;
+		const alert = await this.alertCtrl.create({
+			header: todo.label,
+			message: "Add your modification here",
+			inputs:[{
+				type:"text",
+				name:"label",
+				value:todo.label
+			},
+			{
+				type:"textarea",
+				name:"content",
+				value:todo.content
+			},
+			{
+				type:"checkbox",
+				name:"isDone",
+			}],
+			buttons: [{
+				text: 'Yes',
+				handler: () => {
+					modifiate = true;
+				}
+			  },
+			  {
+				text: 'Cancel',
+				role: 'cancel',
+			  }]
+				});
+			alert.present();
+			let result = await alert.onDidDismiss();
+			if(modifiate){
+				if(result["data"]["values"]["isDone"] === "on"){
+					result["data"]["values"]["isDone"] = "true";
+				}
+				else{
+					result["data"]["values"]["isDone"] = "false";
+				}
+				this.todoService.modifiateTodo(todo.id,result["data"]["values"]);
+				this.getTodos();				
+			}
+	  }
+
+	  async deleteTodo(todo){
+		const alert = await this.alertCtrl.create({
+			header: "Confirmation to delete",
+			message: "Are you sure to delete ?",
+			buttons: [{
+				text: 'Yes',
+				handler: () => {
+				this.todoService.deleteTodo(todo.id);
+				this.getTodos();
+				}
+			  },
+			  {
+				text: 'Cancel',
+				role: 'cancel',
+			  }]
+				});
+			alert.present();
+	  }
+
+  ngOnInit() {
+        this.resetEvent();
+        this.resetTodo();
+        this.adeService.getAde().then(res => { 
+        this.buildAndPushEvent(res);
+       })
+    }
 }

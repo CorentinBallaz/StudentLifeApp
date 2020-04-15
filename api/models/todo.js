@@ -3,7 +3,6 @@ var mongoose = require('mongoose');
 var TodoSchema = new mongoose.Schema({
         email : {
             type :String,
-            required:true,
 
         },
         label : {
@@ -21,8 +20,7 @@ var TodoSchema = new mongoose.Schema({
 
         },
         isDone:{
-            type:Boolean,
-            default:true
+            type:Boolean
         }
 })
 module.exports = mongoose.model('Todo', TodoSchema);
