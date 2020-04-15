@@ -11,7 +11,7 @@ from icalendar import Calendar
 from icalendar import vDatetime
 
 import datetime
-from datetime import date
+from datetime import date,timedelta
 
 import pymongo
 from pymongo import MongoClient
@@ -43,12 +43,12 @@ for event in cal.walk('vevent') :
     eventStartTime = (event["DTSTART"].dt).strftime("%d-%m-%Y")
     
     t = (event["DTSTART"].dt)
-    eventStartTimeDate = datetime.datetime(t.year, t.month, t.day)
+    eventStartTimeDate = datetime.datetime(t.year, t.month, t.day)-timedelta(hours=2)
     
     
     eventEndTime = (event["DTEND"].dt).strftime("%d-%m-%Y")
     t = (event["DTEND"].dt)
-    eventEndTimeDate = datetime.datetime(t.year, t.month, t.day)
+    eventEndTimeDate = datetime.datetime(t.year, t.month, t.day)-timedelta(hours=2)
     
 
     document = {"title":eventTitle,"description":eventDescription,"startTime":eventStartTimeDate,"endTime":eventEndTimeDate}
