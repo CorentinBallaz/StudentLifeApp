@@ -12,7 +12,7 @@ var cors        = require('cors');
 var cron = require('node-cron');
 var app = express();
 const {spawn} = require('child_process');
-var initData = require("./data/loadData");
+var initData = require("./dataToBdd/loadData");
 app.use(cors());
 
 
@@ -26,7 +26,7 @@ var passportMiddleware = require('./middleware/passport');
 passport.use(passportMiddleware);
 
 
-//Injection data to the DB (for prod) ...
+//Injection dataToBdd to the DB (for prod) ...
 // initData.injectBDD();
 
 
