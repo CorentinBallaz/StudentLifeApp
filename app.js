@@ -12,7 +12,7 @@ var cors        = require('cors');
 var cron = require('node-cron');
 var app = express();
 const {spawn} = require('child_process');
-
+var initData = require("./data/loadData");
 app.use(cors());
 
 
@@ -25,23 +25,9 @@ app.use(passport.initialize());
 var passportMiddleware = require('./middleware/passport');
 passport.use(passportMiddleware);
 
-const pythonEvent = spawn('python3', ['buildEventsAndAddToDb.py']);
-const python = spawn('python3', ['exampleScript.py']);
-python.stdout.on('data', function (data) {
-    console.log('Pipe data from python script ...');
-    dataToSend = data.toString();
-    console.log(dataToSend);
-});
 
-
-//
-// cron.schedule('* * * * *',function (){
-//
-//     console.log("un test");
-//
-//     });
-//
-
+//Injection data to the DB (for prod) ...
+initData.injectBDD()
 
 
 // Demo Route (GET http://localhost:5000)
