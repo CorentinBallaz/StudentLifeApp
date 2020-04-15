@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var AdeEventSchema = new mongoose.Schema({
+var EadEventSchema = new mongoose.Schema({
         title : {
             type :String,
             required:true
@@ -9,18 +9,11 @@ var AdeEventSchema = new mongoose.Schema({
             type:String,
             required : true
         },
-        place : {
-            type:String,
-            required: true
-        },
         startTime : {
             type : Date
         },
         endTime:{
             type:Date
-        },
-        occurence:{
-            type:String
         }
 })
-module.exports = mongoose.model('EventAde', AdeEventSchema);
+module.exports = mongoose.model('EventEad', EadEventSchema);
