@@ -34,9 +34,6 @@ contents = urllib.request.urlopen(eadIdu4Url)
 
 cal = Calendar.from_ical(contents.read())
 
-myDf = pd.DataFrame(columns=['title','description','startTime','endTime','startTimeDate','endTimeDate'])
-
-
 ids=[]
 
 for event in cal.walk('vevent') :
