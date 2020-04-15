@@ -19,5 +19,13 @@ export class AdeService {
   			})
   		})
   	}
+
+  	getEad() {
+  		return new Promise((resolve,reject)=> {
+  			this.http.get(`${this.url}/api/getEad`).subscribe(res => {
+  				resolve(res);
+  			})
+  		})
+  	}
 }
 

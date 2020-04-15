@@ -4,6 +4,7 @@ var userController  = require('../controllers/user-controller');
 var passport	    = require('passport');
 var todoController  = require('../controllers/todo-controller');
 var adeController = require('../controllers/ade-controller');
+var eadController = require('../controllers/ead-controller');
 
 
 routes.get('/', (req, res) => {
@@ -40,7 +41,11 @@ routes.put('/todo/:todoID',(req,res)=> {
 });
 
 routes.get('/getAde',(req,res)=>{
-    adeController.getEvents(req,res);
+    adeController.getEventsAde(req,res);
 });
+
+routes.get('/getEad',(req,res)=>{
+    eadController.getEventsEad(req,res);
+})
 
 module.exports = routes;

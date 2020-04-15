@@ -71,14 +71,29 @@ export class TimeManagerPage implements OnInit {
     };
   }
  
-    buildAndPushEvent(data) {
+    buildAndPushEvent(data,isEadEvent) {
       data.events.forEach(element => {
+      	let eventTitle;
+      	let startTime;
+      	let endTime;
+      	if (isEadEvent) {
+      		//eventTitle = "Rendu EAD";
+      		eventTitle = element.title;
+      		startTime = new Date(element.startTime);
+      		endTime = startTime;
+      	}
+      	else {
+      		eventTitle = element.title;
+			startTime= new Date(element.startTime);
+      		endTime= new Date(element.endTime);
+      	}
+      	
 
         let event={
-          title:element.title,
-          startTime:new Date(element.startTime),
-          endTime:new Date(element.endTime),
-          allDay:false,
+          title:eventTitle,
+          startTime:startTime,
+          endTime:endTime,
+          allDay: isEadEvent,
           desc:element.description,
           occurence:element.occurence
         }
@@ -87,6 +102,8 @@ export class TimeManagerPage implements OnInit {
         })
       this.myCal.loadEvents();
     }
+
+
   // Create the right event format and reload source
   	addEvent() {
     	let eventCopy = {
@@ -99,10 +116,10 @@ export class TimeManagerPage implements OnInit {
  
     if (eventCopy.allDay) {
       	let start = eventCopy.startTime;
-      	let end = eventCopy.endTime;
+      	let end = eventCopy.startTime;
  
       	eventCopy.startTime = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate()));
-      	eventCopy.endTime = new Date(Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), end.getUTCDate() + 1));
+      	eventCopy.endTime = new Date(Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), end.getUTCDate())+1);
     }
  
     this.eventSource.push(eventCopy);
@@ -141,11 +158,17 @@ export class TimeManagerPage implements OnInit {
   // Use Angular date pipe for conversion
   		let start = formatDate(event.startTime, 'medium', this.locale);
   		let end = formatDate(event.endTime, 'medium', this.locale);
- 
+ 		let message;
+  		if (event.allDay) {
+  			message="Deadline: "+start;
+  		}
+  		else {
+  			message='Début: ' + start + '<br><br>Fin: ' + end;
+  		}
   		const alert = await this.alertCtrl.create({
     	header: event.title,
     	subHeader: event.desc,
-    	message: 'From: ' + start + '<br><br>To: ' + end,
+    	message: message,
     	buttons: ['OK']
   		});
   	alert.present();
@@ -274,7 +297,10 @@ export class TimeManagerPage implements OnInit {
         this.resetEvent();
         this.resetTodo();
         this.adeService.getAde().then(res => { 
-        this.buildAndPushEvent(res);
-       })
+        this.buildAndPushEvent(res,false);
+       	})
+        this.adeService.getEad().then(res=>{
+        	this.buildAndPushEvent(res,true);
+        })
     }
 }
