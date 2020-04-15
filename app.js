@@ -27,7 +27,7 @@ passport.use(passportMiddleware);
 
 
 //Injection data to the DB (for prod) ...
-initData.injectBDD()
+// initData.injectBDD();
 
 
 // Demo Route (GET http://localhost:5000)
