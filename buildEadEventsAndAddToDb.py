@@ -11,10 +11,7 @@ from icalendar import Calendar
 from icalendar import vDatetime
 
 import datetime
-from datetime import timedelta
 from datetime import date
-
-import pandas as pd
 
 import pymongo
 from pymongo import MongoClient
@@ -39,8 +36,10 @@ cal = Calendar.from_ical(contents.read())
 
 myDf = pd.DataFrame(columns=['title','description','startTime','endTime','startTimeDate','endTimeDate'])
 
+
+ids=[]
+
 for event in cal.walk('vevent') :
-    print(event)
     eventTitle = event["SUMMARY"].to_ical().decode("UTF-8")
     eventDescription = (event["DESCRIPTION"].to_ical().decode("UTF-8")).replace('\\n',' ')
     
@@ -54,20 +53,9 @@ for event in cal.walk('vevent') :
     t = (event["DTEND"].dt)
     eventEndTimeDate = datetime.datetime(t.year, t.month, t.day)
     
-    events=[]
-    currentEvent={}
-    currentEvent["title"]=eventTitle
-    currentEvent["description"]=eventDescription
-    currentEvent["startTime"]=eventStartTime
-    currentEvent["endTime"]=eventEndTime
-    currentEvent["startTimeDate"]=eventStartTimeDate
-    currentEvent["endTimeDate"]=eventEndTimeDate
-    
-    myDf = myDf.append(currentEvent,ignore_index=True)
 
-ids=[]
-for index, row in myDf.iterrows():
-    document = {"title":row["title"],"description":row["description"],"startTime":row["startTimeDate"],"endTime":row["endTimeDate"]}
+    document = {"title":eventTitle,"description":eventDescription,"startTime":eventStartTimeDate,"endTime":eventEndTimeDate}
+
     res = eventCollection.insert_one(document)
     _id = res.inserted_id
     ids.append(_id)
