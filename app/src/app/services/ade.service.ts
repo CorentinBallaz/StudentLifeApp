@@ -38,5 +38,15 @@ export class AdeService {
         })
       })
     }
+  	getCoursesOverview(nbWeek){
+		this.authService.checkToken();
+		const userID = this.authService.user['id'];
+		return new Promise((resolve,reject)=> {
+			this.http.get(`${this.url}/api/getAde/coursesNumber/${userID}&${nbWeek}`).subscribe(res => {
+				resolve(res);
+			})
+		})
+
+	}
 }
 

@@ -13,7 +13,7 @@ import datetime
 from datetime import timedelta
 
 import pandas as pd
-
+import re
 import pymongo
 from pymongo import MongoClient
 
@@ -33,7 +33,7 @@ contents = urllib.request.urlopen(idu4url)
 
 cal = Calendar.from_ical(contents.read())
 
-myDf = pd.DataFrame(columns=['title','description','place','startTime','endTime','number','startTimeDate','endTimeDate'])
+myDf = pd.DataFrame(columns=['title','description','place','startTime','endTime','number','startTimeDate','endTimeDate','type'])
 
 for event in cal.walk('vevent') :
     eventTitle = event["SUMMARY"].to_ical().decode("UTF-8")
@@ -48,6 +48,14 @@ for event in cal.walk('vevent') :
     events=[]
     currentEvent={}
     currentEvent["title"]=eventTitle
+    if "TD" in eventTitle :
+         currentEvent["type"] = "TD"
+    elif "TP" in eventTitle :
+        currentEvent["type"] = "TP"
+    elif "CM" in eventTitle :
+        currentEvent["type"] = "CM"
+    else:
+        currentEvent["type"] = "Other"
     currentEvent["description"]=eventDescription
     currentEvent["place"]=eventPlace
     currentEvent["startTime"]=eventStartTime
@@ -73,7 +81,7 @@ for index, row in myDf.iterrows():
     totalOccurence = occurencies[row["title"]]
     myDf.loc[index,'number']=str(occurence)+"/"+str(totalOccurence)
     count[row["title"]]+=1
-    document = {"title":row["title"],"description":row["description"],"place":row["place"],"startTime":row["startTimeDate"],"endTime":row["endTimeDate"],"occurence":row["number"]}
+    document = {"title":row["title"],"description":row["description"],"place":row["place"],"startTime":row["startTimeDate"],"endTime":row["endTimeDate"],"occurence":row["number"],"type":row["type"]}
     res = eventCollection.insert_one(document)
     _id = res.inserted_id
     ids.append(_id)
