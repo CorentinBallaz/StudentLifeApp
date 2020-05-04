@@ -14,11 +14,8 @@ var UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    formation: {
+    filiere: {
         type: String,
-    },
-    year : {
-        type:String,
     },
     todos : [{ type: Schema.ObjectId, ref: "Todo" }]
 });
