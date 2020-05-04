@@ -27,6 +27,7 @@ export class TimeManagerPage implements OnInit {
 	isDesktop: boolean;
 	myTodosFinished = [];
 	myTodosNotFinished = [];
+	courseOverview : any;
 	todoForm: FormGroup;
 	eventSource = [];
   viewTitle: string;
@@ -46,6 +47,7 @@ export class TimeManagerPage implements OnInit {
 	    allDay: false,
 	    occurence:''
   	};
+
 
   	minDate = new Date().toISOString();
 
@@ -302,6 +304,13 @@ export class TimeManagerPage implements OnInit {
 				});
 			alert.present();
 	  }
+	  async getCoursesOverview(){
+  		this.adeService.getCoursesOverview(this.desiredTime).then(res => {
+			this.courseOverview=res;
+			console.log(res);
+		});
+
+	  }
 
 	  @ViewChild('barChart',{static: false}) barChart;
 
@@ -330,6 +339,9 @@ export class TimeManagerPage implements OnInit {
 			}]
 		  },
 		  options: {
+			  legend: {
+				  display: false
+			  },
 			scales: {
 			  yAxes: [{
 				ticks: {
@@ -342,7 +354,56 @@ export class TimeManagerPage implements OnInit {
 	  }
 
 	@ViewChild('barChartCoursesOverview',{static: false}) barChartCoursesOverview;
+	createBarChart1(){
+		this.adeService.getCoursesOverview(this.desiredTime).then(res => {
+			let courseOver = res;
+			let allLabels = [];
+			let nbData = [];
+			console.log(res);
+			for (var  i=0;i<courseOver.length;i++){
+				if (courseOver[i]["_id"]!=="Other"){
+					console.log(courseOver);
+					allLabels.push(courseOver[i]["_id"]);
+					nbData.push(courseOver[i]["count"])
+				}
+
+			}
+
+
+			this.bars = new Chart(this.barChartCoursesOverview.nativeElement, {
+				type: 'bar',
+				data: {
+					labels: allLabels,
+					datasets: [{
+						data: nbData,
+						backgroundColor: ['rgb(38, 194, 129)','rgb(38, 70, 200)','rgb(200, 115, 17)'], // array should have same number of elements as number of dataset
+						borderColor: ['rgb(38, 194, 129)','rgb(38, 70, 200)','rgb(200, 115, 17)'],// array should have same number of elements as number of dataset
+						borderWidth: -10
+					}]
+				},
+				options: {
+					legend: {
+						display: false
+					},
+					scales: {
+						yAxes: [{
+							ticks: {
+								beginAtZero: true
+							}
+						}]
+					}
+				}
+			});
+
+		});
+	}
+
+	desiredTime: any;
+	changeTime(){
+		this.createBarChart1();
+	}
   ngOnInit() {
+
         this.resetEvent();
         this.resetTodo();
         this.adeService.getAde().then(res => { 
@@ -351,5 +412,9 @@ export class TimeManagerPage implements OnInit {
         this.adeService.getEad().then(res=>{
         	this.buildAndPushEvent(res,true);
         })
+	  this.desiredTime=1;
+        this.createBarChart1();
+        // this.getCoursesOverview();
+
     }
 }

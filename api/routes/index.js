@@ -48,4 +48,9 @@ routes.get('/getEad',(req,res)=>{
     eadController.getEventsEad(req,res);
 })
 
+routes.get('/getAde/coursesNumber/:userID&:numberWeek',(req,res)=>{
+
+    adeController.getCoursesNumber(req,res);
+})
+
 module.exports = routes;
