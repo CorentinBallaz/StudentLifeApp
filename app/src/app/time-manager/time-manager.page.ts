@@ -47,6 +47,39 @@ export class TimeManagerPage implements OnInit {
 	    type:''
   	};
 
+  	adeEventStyle = {
+	  "background-color":"green" ,
+	  "overflow": "hidden",
+	  "color": "white",
+	  "height": "100%",
+	  "width": "100%",
+	  "padding": "2px",
+	  "line-height": "15px",
+	  "text-align": "initial"
+	}
+
+	eadEventStyle = {
+	  "background-color":"red" ,
+	  "overflow": "hidden",
+	  "color": "white",
+	  "height": "100%",
+	  "width": "100%",
+	  "padding": "2px",
+	  "line-height": "15px",
+	  "text-align": "initial"
+	}
+
+	todoEventStyle = {
+	  "background-color":"blue" ,
+	  "overflow": "hidden",
+	  "color": "white",
+	  "height": "100%",
+	  "width": "100%",
+	  "padding": "2px",
+	  "line-height": "15px",
+	  "text-align": "initial"
+	}
+
   	minDate = new Date().toISOString();
 
   	@ViewChild(CalendarComponent,{static: false}) 
