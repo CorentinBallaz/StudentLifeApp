@@ -48,6 +48,10 @@ routes.get('/getAde',(req,res)=>{
     adeController.getEventsAde(req,res);
 });
 
+routes.get('/getFiliere',(req,res)=>{
+    adeController.getAllEventsAde(req,res);
+});
+
 routes.get('/getEad',(req,res)=>{
     eadController.getEventsEad(req,res);
 })

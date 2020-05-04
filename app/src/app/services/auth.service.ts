@@ -84,6 +84,19 @@ export class AuthService {
     )
   }
 
+  getFiliere() {
+    return this.http.get(`${this.url}/api/getFiliere`).pipe(
+      catchError(e => {
+        let status = e.status;
+        if (status === 401) {
+          this.showAlert('You are not authorized for this!');
+          this.logout();
+        }
+        throw new Error(e);
+      })
+    )
+  }
+
   getEmail() {
     return this.http.get(`${this.url}/api/email`).pipe(
       catchError(e => {

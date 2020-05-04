@@ -11,3 +11,19 @@ exports.getEventsAde = (req,res)=> {
         }
     })
 } 
+
+exports.getAllEventsAde = (req,res)=> {
+    Ade.find({}).exec(function (err,ade) {
+        var filieres=[];
+        if (err) {
+            return res.status(400).send({ 'msg': err });
+        }
+        else {
+            for(var i=0;i<ade.length;i++){
+                console.log(i);
+                filieres.push(ade[i]['filiere']);
+            };
+            return res.json(filieres);
+        }
+    })
+} 

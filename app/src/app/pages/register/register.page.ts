@@ -10,6 +10,7 @@ import { AuthService } from '../../services/auth.service';
 export class RegisterPage implements OnInit {
  
   credentialsForm: FormGroup;
+  filieres: any;
  
   constructor(private formBuilder: FormBuilder, private authService: AuthService) { }
  
@@ -17,8 +18,14 @@ export class RegisterPage implements OnInit {
     this.credentialsForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      formation: ['', [Validators.required, Validators.minLength(1)]],
-      year: ['', [Validators.required, Validators.minLength(1)]]
+      filiere: ['', [Validators.required, Validators.minLength(1)]]
+    });
+    this.getFiliere();
+  }
+
+  getFiliere(){
+    this.authService.getFiliere().subscribe(res => {
+      this.filieres = res;
     });
   }
 

@@ -26,20 +26,9 @@
             </ion-item>
 
             <ion-item>
-              <ion-label>Formation</ion-label>
-              <ion-select formControlName="formation">
-                <ion-select-option>IDU</ion-select-option>
-                <ion-select-option>MM</ion-select-option>
-                <ion-select-option>IAI</ion-select-option>
-              </ion-select>
-            </ion-item>
-
-            <ion-item>
-              <ion-label>Année de formation</ion-label>
-              <ion-select formControlName="year">
-                <ion-select-option>3ème année</ion-select-option>
-                <ion-select-option>4ème année</ion-select-option>
-                <ion-select-option>5ème année</ion-select-option>
+              <ion-label>Filière</ion-label>
+              <ion-select formControlName="filiere" *ngFor="let filiere of filieres">
+                <ion-select-option>{{filiere}}</ion-select-option>
               </ion-select>
             </ion-item>
 
