@@ -119,7 +119,8 @@ export class TimeManagerPage implements OnInit {
 
   	buildAndPushTodoEvents(data) {
         data.forEach(element => {
-		    let event={
+        	if (element.isDone == false) {
+        		let event={
 		        title:element.label,
 		        startTime:new Date(element.deadline),
 		        endTime:new Date(element.deadline),
@@ -128,6 +129,7 @@ export class TimeManagerPage implements OnInit {
 		        type:"TODO"
 		    }
 		    this.eventSource.push(event);
+        	}
 		});
 	    this.myCal.loadEvents();
   	}
@@ -276,6 +278,7 @@ export class TimeManagerPage implements OnInit {
 				handler: () => {
 				this.todoService.modifiateTodo(todo.id,{isDone:true});
 				this.getTodos();
+				this.buildAndPushAllEvents();
 				}
 			  },
 			  {
