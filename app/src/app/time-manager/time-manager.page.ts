@@ -341,6 +341,7 @@ export class TimeManagerPage implements OnInit {
 		});
 	  }
 
+	@ViewChild('barChartCoursesOverview',{static: false}) barChartCoursesOverview;
   ngOnInit() {
         this.resetEvent();
         this.resetTodo();

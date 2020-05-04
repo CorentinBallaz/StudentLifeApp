@@ -27,5 +27,8 @@ export class AdeService {
   			})
   		})
   	}
+  	getCoursesOverview(){
+
+	}
 }
 
