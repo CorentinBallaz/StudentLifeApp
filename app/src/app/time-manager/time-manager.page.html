@@ -191,6 +191,9 @@
             <ion-list>
               <ion-item *ngFor="let todo of myTodosNotFinished">
                 <ion-label ion-button (click) ='onTodoSelected(todo)' class="label-todo">{{todo.label}}</ion-label>
+                <ion-button class="button-todo" fill="clear" (click) = 'finishTodo(todo)'>
+                  <ion-icon class="icon-todo" name="checkmark-circle"></ion-icon>
+                </ion-button>
                 <ion-button class="button-todo" fill="clear" (click) ="modifiateTodo(todo)">
                   <ion-icon class="icon-todo" name="create-outline"></ion-icon>
                 </ion-button>

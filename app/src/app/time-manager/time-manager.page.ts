@@ -240,6 +240,25 @@ export class TimeManagerPage implements OnInit {
 		  this.todoService.logout();
 	  }
 
+	  async finishTodo(todo){
+		const alert = await this.alertCtrl.create({
+			header: "Confirmation to be finish",
+			message: "Are you sure you have finished it ?",
+			buttons: [{
+				text: 'Yes',
+				handler: () => {
+				this.todoService.modifiateTodo(todo.id,{isDone:true});
+				this.getTodos();
+				}
+			  },
+			  {
+				text: 'Cancel',
+				role: 'cancel',
+			  }]
+				});
+			alert.present();
+	  }
+
 	  async modifiateTodo(todo){
 		var modifiate = false;
 		const alert = await this.alertCtrl.create({
@@ -254,10 +273,6 @@ export class TimeManagerPage implements OnInit {
 				type:"textarea",
 				name:"content",
 				value:todo.content
-			},
-			{
-				type:"checkbox",
-				name:"isDone",
 			}],
 			buttons: [{
 				text: 'Yes',
@@ -273,12 +288,6 @@ export class TimeManagerPage implements OnInit {
 			alert.present();
 			let result = await alert.onDidDismiss();
 			if(modifiate){
-				if(result["data"]["values"]["isDone"] === "on"){
-					result["data"]["values"]["isDone"] = "true";
-				}
-				else{
-					result["data"]["values"]["isDone"] = "false";
-				}
 				this.todoService.modifiateTodo(todo.id,result["data"]["values"]);
 				this.getTodos();				
 			}
