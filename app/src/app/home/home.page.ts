@@ -1,7 +1,14 @@
-import { AuthService } from '../services/auth.service';
-import { Component, OnInit } from '@angular/core';
-import { Storage } from '@ionic/storage';
-import { ToastController } from '@ionic/angular';
+import { Component, ViewChild, OnInit, Inject, LOCALE_ID } from '@angular/core';
+import { CalendarComponent } from 'ionic2-calendar/calendar';
+import { NavController, AlertController } from '@ionic/angular';
+import { formatDate } from '@angular/common';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { TodoService } from '../services/todo.service';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+import { ScreensizeService } from '../services/screensize.service';
+import { HttpClient } from '@angular/common/http';
+import { Chart } from 'chart.js'
  
 @Component({
   selector: 'app-home',
@@ -10,21 +17,25 @@ import { ToastController } from '@ionic/angular';
 })
 export class HomePage implements OnInit {
  
-  data = '';
- 
-  constructor(private authService: AuthService, private storage: Storage, private toastController: ToastController) { }
- 
+  isDesktop: boolean;
+  
+  constructor(private screensizeService: ScreensizeService,private todoService: TodoService) {
+		this.screensizeService.isDesktopView().subscribe(isDesktop => {
+			if (this.isDesktop && !isDesktop) {
+			  // Reload because our routing is out of place
+			  window.location.reload();
+			}
+	   
+			this.isDesktop = isDesktop;
+		  });
+     }
+     
   ngOnInit() {
-    this.loadSpecialInfo();
+    
   }
- 
-  loadSpecialInfo() {
-    this.authService.getSpecialData().subscribe(res => {
-      this.data = res['msg'] + " How are you?";
-    });
-  }
+
  
   logout() {
-    this.authService.logout();
+    this.todoService.logout();
   }
 }

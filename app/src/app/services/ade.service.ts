@@ -11,7 +11,7 @@ export class AdeService {
 
 	url = environment.url;
 
-  	constructor(private http:HttpClient,private authService: AuthService) { }
+  	constructor(private http:HttpClient, private authService: AuthService) { }
 
   	getAde() {
   		return new Promise((resolve,reject)=> {
@@ -28,6 +28,16 @@ export class AdeService {
   			})
   		})
   	}
+
+    getTodos() {
+      this.authService.checkToken();
+      const userID = this.authService.user['id'];
+      return new Promise((resolve,reject)=> {
+        this.http.get(`${this.url}/api/todos/${userID}`).subscribe(res => {
+          resolve(res);
+        })
+      })
+    }
   	getCoursesOverview(nbWeek){
 		this.authService.checkToken();
 		const userID = this.authService.user['id'];

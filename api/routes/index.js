@@ -20,6 +20,10 @@ routes.get('/special', passport.authenticate('jwt', { session: false }), (req, r
 routes.get('/email', passport.authenticate('jwt', { session: false }), (req, res) => {
     return res.json({ msg: req.user.email});
 });
+
+routes.get('/userFormation/:userID',(req,res)=>{
+    userController.getFormation(req,res);
+})
 // ------------- Todos Request ------------------------------
 routes.post('/createTodo',(req,res)=>{
     todoController.createTodo(req,res)
@@ -44,6 +48,10 @@ routes.get('/getAde',(req,res)=>{
     adeController.getEventsAde(req,res);
 });
 
+routes.get('/getFiliere',(req,res)=>{
+    adeController.getAllEventsAde(req,res);
+});
+
 routes.get('/getEad',(req,res)=>{
     eadController.getEventsEad(req,res);
 })
@@ -52,5 +60,7 @@ routes.get('/getAde/coursesNumber/:userID&:numberWeek',(req,res)=>{
 
     adeController.getCoursesNumber(req,res);
 })
+
+
 
 module.exports = routes;

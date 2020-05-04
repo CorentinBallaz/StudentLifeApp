@@ -8,8 +8,6 @@ var TodoSchema = new mongoose.Schema({
         label : {
             type:String,
             required : true,
-            unique:true
-
         },
         content : {
             type:String,

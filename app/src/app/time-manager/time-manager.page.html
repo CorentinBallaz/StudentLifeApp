@@ -7,13 +7,13 @@
         </ion-col>
         <ion-col size="8">
           <div class="navbar" class="ion-text-center">
-            <ion-button fill="clear" routerLink="/home" routerDirection="root" routerLinkActive="active-link"
-              class="link">
-              Home
-            </ion-button>
             <ion-button fill="clear" routerLink="/time-manager" routerDirection="root" routerLinkActive="active-link"
               class="link">
               Calendar
+            </ion-button>
+            <ion-button fill="clear" routerLink="/notes-manager" routerDirection="root" routerLinkActive="active-link"
+              class="link">
+              Notes
             </ion-button>
           </div>
         </ion-col>
@@ -38,7 +38,13 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header> -->
- 
+
+<ng-template #template let-displayEvent="displayEvent">
+        <div *ngIf="displayEvent.event.type=='ADE'" [ngStyle]="adeEventStyle">{{displayEvent.event.title}}</div>
+        <div *ngIf="displayEvent.event.type=='EAD'" [ngStyle]="eadEventStyle">{{displayEvent.event.title}}</div>
+        <div *ngIf="displayEvent.event.type=='TODO'" [ngStyle]="todoEventStyle">{{displayEvent.event.title}}</div>
+</ng-template>
+
 <ion-content>
 <ion-grid>
   <ion-row>
@@ -187,7 +193,7 @@
       [calendarMode]="calendar.mode" 
       [currentDate]="calendar.currentDate"
       [locale]="calendar.locale"
-      allDayLabel="EAD"
+      allDayLabel="Work"
       formatHourColumn="HH:mm"
       formatWeekTitle = "MMMM yyyy, 'Semaine' w"
       (onEventSelected)="onEventSelected($event)"
@@ -197,7 +203,9 @@
       endHour="20"
       step="30"
       startingDayWeek="1"
-      startingDayMonth="0">
+      startingDayMonth="0"
+      [weekviewNormalEventTemplate]="template"
+      [weekviewAllDayEventTemplate]="template">
       </calendar>
       </ion-col>
 
@@ -271,6 +279,9 @@
             <ion-list>
               <ion-item *ngFor="let todo of myTodosNotFinished">
                 <ion-label ion-button (click) ='onTodoSelected(todo)' class="label-todo">{{todo.label}}</ion-label>
+                <ion-button class="button-todo" fill="clear" (click) = 'finishTodo(todo)'>
+                  <ion-icon class="icon-todo" name="checkmark-circle"></ion-icon>
+                </ion-button>
                 <ion-button class="button-todo" fill="clear" (click) ="modifiateTodo(todo)">
                   <ion-icon class="icon-todo" name="create-outline"></ion-icon>
                 </ion-button>

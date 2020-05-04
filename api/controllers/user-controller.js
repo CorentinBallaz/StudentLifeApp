@@ -33,7 +33,18 @@ exports.registerUser = (req, res) => {
         });
     });
 };
+exports.getFormation = (req,res)=>{
+    User.findOne({_id:req.params.userID},(err,resa)=>{
 
+            if (err) {
+                return res.status(400).send({'msg': err});
+            } else {
+
+                res.status(200).send(resa["filiere"]);
+            }
+
+    })
+};
 exports.loginUser = (req, res) => {
     if (!req.body.email || !req.body.password) {
         return res.status(400).send({ 'msg': 'You need to send email and password' });

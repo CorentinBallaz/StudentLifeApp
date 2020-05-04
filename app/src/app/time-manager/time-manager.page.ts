@@ -45,9 +45,41 @@ export class TimeManagerPage implements OnInit {
 	    startTime: '',
 	    endTime: '',
 	    allDay: false,
-	    occurence:''
+	    type:''
   	};
 
+  	adeEventStyle = {
+	  "background-color":"green" ,
+	  "overflow": "hidden",
+	  "color": "white",
+	  "height": "100%",
+	  "width": "100%",
+	  "padding": "2px",
+	  "line-height": "15px",
+	  "text-align": "initial"
+	}
+
+	eadEventStyle = {
+	  "background-color":"red" ,
+	  "overflow": "hidden",
+	  "color": "white",
+	  "height": "100%",
+	  "width": "100%",
+	  "padding": "2px",
+	  "line-height": "15px",
+	  "text-align": "initial"
+	}
+
+	todoEventStyle = {
+	  "background-color":"blue" ,
+	  "overflow": "hidden",
+	  "color": "white",
+	  "height": "100%",
+	  "width": "100%",
+	  "padding": "2px",
+	  "line-height": "15px",
+	  "text-align": "initial"
+	}
 
   	minDate = new Date().toISOString();
 
@@ -72,41 +104,69 @@ export class TimeManagerPage implements OnInit {
       	startTime: new Date().toISOString(),
       	endTime: new Date().toISOString(),
       	allDay: false,
-      	occurence:''
+      	type:''
     };
   }
- 
-    buildAndPushEvent(data,isEadEvent) {
-      data.events.forEach(element => {
-      	let eventTitle;
-      	let startTime;
-      	let endTime;
-      	if (isEadEvent) {
-      		//eventTitle = "Rendu EAD";
-      		eventTitle = element.title;
-      		startTime = new Date(element.startTime);
-      		endTime = startTime;
-      	}
-      	else {
-      		eventTitle = element.title;
-			startTime= new Date(element.startTime);
-      		endTime= new Date(element.endTime);
-      	}
-      	
 
-        let event={
-          title:eventTitle,
-          startTime:startTime,
-          endTime:endTime,
-          allDay: isEadEvent,
-          desc:element.description,
-          occurence:element.occurence
-        }
-        this.eventSource.push(event);
-        this.resetEvent();
-        })
-      this.myCal.loadEvents();
-    }
+  	buildAndPushAllEvents() {
+  		this.eventSource=[];
+  		this.adeService.getAde().then(res => {
+  			this.buildAndPushAdeEvents(res);
+  		});
+  		this.adeService.getEad().then(res => {
+  			this.buildAndPushEadEvents(res);
+  		});
+  		this.adeService.getTodos().then(res => {
+  			this.buildAndPushTodoEvents(res);
+  		});
+  	}
+
+  	buildAndPushAdeEvents(data) {
+        data.events.forEach(element => {
+		    let event={
+		        title:element.title,
+		        startTime:new Date(element.startTime),
+		        endTime:new Date(element.endTime),
+		        allDay: false,
+		        desc:element.description,
+		        type:"ADE"
+		    }
+		    this.eventSource.push(event);
+		});
+	    this.myCal.loadEvents();
+  	}
+
+  	buildAndPushEadEvents(data) {
+        data.events.forEach(element => {
+		    let event={
+		        title:element.title,
+		        startTime:new Date(element.startTime),
+		        endTime:new Date(element.startTime),
+		        allDay: true,
+		        desc:element.description,
+		        type:"EAD"
+		    }
+		    this.eventSource.push(event);
+		});
+	    this.myCal.loadEvents();
+  	}
+
+  	buildAndPushTodoEvents(data) {
+        data.forEach(element => {
+        	if (element.isDone == false) {
+        		let event={
+		        title:element.label,
+		        startTime:new Date(element.deadline),
+		        endTime:new Date(element.deadline),
+		        allDay: true,
+		        desc:element.content,
+		        type:"TODO"
+		    }
+		    this.eventSource.push(event);
+        	}
+		});
+	    this.myCal.loadEvents();
+  	}
 
 
   // Create the right event format and reload source
@@ -116,7 +176,8 @@ export class TimeManagerPage implements OnInit {
       		startTime:  new Date(this.event.startTime),
       		endTime: new Date(this.event.endTime),
       		allDay: this.event.allDay,
-      		desc: this.event.desc
+      		desc: this.event.desc,
+      		type:"PERSO"
     	}
  
     if (eventCopy.allDay) {
@@ -164,8 +225,8 @@ export class TimeManagerPage implements OnInit {
   		let start = formatDate(event.startTime, 'medium', this.locale);
   		let end = formatDate(event.endTime, 'medium', this.locale);
  		let message;
-  		if (event.allDay) {
-  			message="Deadline: "+start;
+  		if (event.type == "EAD" || event.type == "TODO") {
+  			message="Deadline: "+start + '<br><br>'+event.desc;
   		}
   		else {
   			message='Début: ' + start + '<br><br>Fin: ' + end;
@@ -200,6 +261,7 @@ export class TimeManagerPage implements OnInit {
 	  async onSubmitTodo() {
 		this.todoService.addTodo(this.todoForm.value).subscribe();
 		await this.resetTodo();
+		this.buildAndPushAllEvents();
 	  }
 
 	  async getTodos(){
@@ -242,6 +304,26 @@ export class TimeManagerPage implements OnInit {
 		  this.todoService.logout();
 	  }
 
+	  async finishTodo(todo){
+		const alert = await this.alertCtrl.create({
+			header: "Confirmation to be finish",
+			message: "Are you sure you have finished it ?",
+			buttons: [{
+				text: 'Yes',
+				handler: () => {
+				this.todoService.modifiateTodo(todo.id,{isDone:true});
+				this.getTodos();
+				this.buildAndPushAllEvents();
+				}
+			  },
+			  {
+				text: 'Cancel',
+				role: 'cancel',
+			  }]
+				});
+			alert.present();
+	  }
+
 	  async modifiateTodo(todo){
 		var modifiate = false;
 		const alert = await this.alertCtrl.create({
@@ -256,10 +338,6 @@ export class TimeManagerPage implements OnInit {
 				type:"textarea",
 				name:"content",
 				value:todo.content
-			},
-			{
-				type:"checkbox",
-				name:"isDone",
 			}],
 			buttons: [{
 				text: 'Yes',
@@ -275,14 +353,9 @@ export class TimeManagerPage implements OnInit {
 			alert.present();
 			let result = await alert.onDidDismiss();
 			if(modifiate){
-				if(result["data"]["values"]["isDone"] === "on"){
-					result["data"]["values"]["isDone"] = "true";
-				}
-				else{
-					result["data"]["values"]["isDone"] = "false";
-				}
 				this.todoService.modifiateTodo(todo.id,result["data"]["values"]);
 				this.getTodos();				
+				this.buildAndPushAllEvents();
 			}
 	  }
 
@@ -295,6 +368,7 @@ export class TimeManagerPage implements OnInit {
 				handler: () => {
 				this.todoService.deleteTodo(todo.id);
 				this.getTodos();
+				this.buildAndPushAllEvents();
 				}
 			  },
 			  {
@@ -403,18 +477,10 @@ export class TimeManagerPage implements OnInit {
 		this.createBarChart1();
 	}
   ngOnInit() {
-
         this.resetEvent();
         this.resetTodo();
-        this.adeService.getAde().then(res => { 
-        this.buildAndPushEvent(res,false);
-       	})
-        this.adeService.getEad().then(res=>{
-        	this.buildAndPushEvent(res,true);
-        })
-	  this.desiredTime=1;
-        this.createBarChart1();
-        // this.getCoursesOverview();
-
+        this.buildAndPushAllEvents();
+      this.desiredTime=1;
+      this.createBarChart1();
     }
 }
