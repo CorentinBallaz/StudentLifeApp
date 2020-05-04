@@ -19,7 +19,7 @@ export class NotesManagerPage implements OnInit {
 
   isDesktop: boolean;
   
-  constructor(private screensizeService: ScreensizeService) {
+  constructor(private screensizeService: ScreensizeService,private todoService: TodoService) {
 		this.screensizeService.isDesktopView().subscribe(isDesktop => {
 			if (this.isDesktop && !isDesktop) {
 			  // Reload because our routing is out of place
@@ -31,6 +31,10 @@ export class NotesManagerPage implements OnInit {
 	   }
 
   ngOnInit() {
+  }
+
+  logout() {
+    this.todoService.logout();
   }
 
 }

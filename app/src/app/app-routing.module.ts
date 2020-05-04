@@ -5,10 +5,6 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'home',
-  loadChildren: './home/home.module#HomePageModule',
-  canActivate: [AuthGuardService]
-  },
   {
     path: 'time-manager',
     loadChildren: './time-manager/time-manager.module#TimeManagerPageModule',
@@ -16,7 +12,8 @@ const routes: Routes = [
   },
   {
     path: 'notes-manager',
-    loadChildren: () => import('./notes-manager/notes-manager.module').then( m => m.NotesManagerPageModule)
+    loadChildren: () => import('./notes-manager/notes-manager.module').then( m => m.NotesManagerPageModule),
+    canActivate: [AuthGuardService]
   },
   {
     path: 'login', loadChildren: './pages/login/login.module#LoginPageModule'
