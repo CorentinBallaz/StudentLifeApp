@@ -17,50 +17,45 @@ export class TodoService {
 
   addTodo(credentials) {
     var Json = {idUser:this.authService.user['id'], label:credentials['title'],content:credentials['content'],deadline:credentials['deadline'],categorie:credentials['categorie'],isDone:false};
-    return this.http.post(`${this.url}/api/createTodo`,Json).pipe(
-      catchError(e => {
-        this.showAlert(e.error.msg);
-        throw new Error(e);
-      })
-    );    
+    return new Promise((resolve,reject)=> {
+        this.http.post(`${this.url}/api/createTodo`,Json).subscribe(res => {
+          resolve(res);
+        })
+      })    
   }
 
-  getTodos(){
-    this.authService.checkToken();
-    const userID = this.authService.user['id'];
-    return this.http.get(`${this.url}/api/todos/${userID}`).pipe(
-      catchError(e => {
-        this.showAlert(e.error.msg);
-        throw new Error(e);
+  getTodos() {
+      this.authService.checkToken();
+      const userID = this.authService.user['id'];
+      return new Promise((resolve,reject)=> {
+        this.http.get(`${this.url}/api/todos/${userID}`).subscribe(res => {
+          resolve(res);
+        })
       })
-    );
-  }
+    }
 
   logout(){
     this.authService.logout();
   }
 
   modifiateTodo(id_todo,credentials){
-    console.log(credentials);
     var Json = {label:credentials['label'],content:credentials['content'],isDone:credentials['isDone']};
-    return this.http.put(`${this.url}/api/todo/${id_todo}`,Json).subscribe(
-      catchError(e => {
-        this.showAlert(e.error.msg);
-        throw new Error(e);
+    return new Promise((resolve,reject)=> {
+        this.http.put(`${this.url}/api/todo/${id_todo}`,Json).subscribe(res => {
+          resolve(res);
+        })
       })
-    );
   }
 
   deleteTodo(id_todo){
+    console.log("In delete");
     const userID = this.authService.user['id'];
     var Json={userID: userID, todoID: id_todo};
-    console.log(`${this.url}/api/todo/${userID}&${id_todo}`);
-    return this.http.delete(`${this.url}/api/todo/${userID}&${id_todo}`).subscribe(
-      catchError(e => {
-        this.showAlert(e.error.msg);
-        throw new Error(e);
+    return new Promise((resolve,reject)=> {
+        this.http.delete(`${this.url}/api/todo/${userID}&${id_todo}`).subscribe(res=> {
+          resolve(res);
+        });
       })
-    );
   }
 
   showAlert(msg) {

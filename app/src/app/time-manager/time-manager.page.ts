@@ -116,7 +116,7 @@ export class TimeManagerPage implements OnInit {
 
   		let adeEvents = await this.adeService.getAde();
   		let eadEvents = await this.adeService.getEad();
-  		let todoEvents = await this.adeService.getTodos();
+  		let todoEvents = await this.todoService.getTodos();
 
   		this.buildAndPushAdeEvents(adeEvents);
   		this.buildAndPushEadEvents(eadEvents);
@@ -261,31 +261,30 @@ export class TimeManagerPage implements OnInit {
 	  }
 
 	  async onSubmitTodo() {
-		this.todoService.addTodo(this.todoForm.value).subscribe();
-		await this.resetTodo();
+		await this.todoService.addTodo(this.todoForm.value);
+		this.resetTodo();
 		this.buildAndPushAllEvents();
 	  }
 
 	  async getTodos(){
 		this.myTodosFinished = [];
 		this.myTodosNotFinished = [];
-		await this.todoService.getTodos().subscribe(res => {
-			for (var j = 0; j < Object.values(res).length; j++) {
-				console.log(Object.values(res)[j]);
-				var currentJson = {id:Object.values(res)[j]["_id"], label:Object.values(res)[j]['label'], content:Object.values(res)[j]["content"], deadline:Object.values(res)[j]["deadline"], categorie:Object.values(res)[j]["categorie"], isDone:Object.values(res)[j]["isDone"]};
-				if(Object.values(res)[j]["isDone"] === true){
-					this.myTodosFinished.push(currentJson);
-				}else{
-					this.myTodosNotFinished.push(currentJson);
-				}
+		let res = await this.todoService.getTodos();
+		for (var j = 0; j < Object.values(res).length; j++) {
+			console.log(Object.values(res)[j]);
+			var currentJson = {id:Object.values(res)[j]["_id"], label:Object.values(res)[j]['label'], content:Object.values(res)[j]["content"], deadline:Object.values(res)[j]["deadline"], categorie:Object.values(res)[j]["categorie"], isDone:Object.values(res)[j]["isDone"]};
+			if(Object.values(res)[j]["isDone"] === true){
+				this.myTodosFinished.push(currentJson);
+			}else{
+				this.myTodosNotFinished.push(currentJson);
 			}
-			this.progression = this.myTodosFinished.length/(this.myTodosFinished.length+this.myTodosNotFinished.length);
-			this.progressionString = (this.progression*100).toFixed(2);
-			if(this.progressionString === "NaN"){
-				this.progressionString = 0;
-			}
-			this.createBarChart();
-	  });
+		}
+		this.progression = this.myTodosFinished.length/(this.myTodosFinished.length+this.myTodosNotFinished.length);
+		this.progressionString = (this.progression*100).toFixed(2);
+		if(this.progressionString === "NaN"){
+			this.progressionString = 0;
+		}
+		this.createBarChart();
 	}
 
 	async onTodoSelected(todo) {
@@ -307,15 +306,14 @@ export class TimeManagerPage implements OnInit {
 	  }
 
 	  async finishTodo(todo){
+	  	let finished = false;
 		const alert = await this.alertCtrl.create({
 			header: "Confirmation to be finish",
 			message: "Are you sure you have finished it ?",
 			buttons: [{
 				text: 'Yes',
 				handler: () => {
-				this.todoService.modifiateTodo(todo.id,{isDone:true});
-				this.getTodos();
-				this.buildAndPushAllEvents();
+					finished = true;
 				}
 			  },
 			  {
@@ -324,11 +322,17 @@ export class TimeManagerPage implements OnInit {
 			  }]
 				});
 			alert.present();
+			await alert.onDidDismiss();
+			if (finished) {
+				await this.todoService.modifiateTodo(todo.id,{isDone:true});
+				this.getTodos();
+				this.buildAndPushAllEvents();
+			}
 	  }
 
 	  async modifiateTodo(todo){
 		var modifiate = false;
-		const alert = await this.alertCtrl.create({
+		let alert = await this.alertCtrl.create({
 			header: todo.label,
 			message: "Add your modification here",
 			inputs:[{
@@ -355,22 +359,21 @@ export class TimeManagerPage implements OnInit {
 			alert.present();
 			let result = await alert.onDidDismiss();
 			if(modifiate){
-				this.todoService.modifiateTodo(todo.id,result["data"]["values"]);
+				await this.todoService.modifiateTodo(todo.id,result["data"]["values"]);
 				this.getTodos();				
 				this.buildAndPushAllEvents();
 			}
 	  }
 
 	  async deleteTodo(todo){
-		const alert = await this.alertCtrl.create({
+	  	let deleted = false;
+		let alert = await this.alertCtrl.create({
 			header: "Confirmation to delete",
 			message: "Are you sure to delete ?",
 			buttons: [{
 				text: 'Yes',
 				handler: () => {
-				this.todoService.deleteTodo(todo.id);
-				this.getTodos();
-				this.buildAndPushAllEvents();
+					deleted = true;
 				}
 			  },
 			  {
@@ -379,7 +382,15 @@ export class TimeManagerPage implements OnInit {
 			  }]
 				});
 			alert.present();
+		await alert.onDidDismiss();
+		if(deleted) {
+			console.log(todo.id);
+			await this.todoService.deleteTodo(todo.id);
+			this.getTodos();
+			this.buildAndPushAllEvents();
+		}
 	  }
+
 	  async getCoursesOverview(){
   		this.adeService.getCoursesOverview(this.desiredTime).then(res => {
 			this.courseOverview=res;

@@ -101,6 +101,7 @@ exports.deleteTodo = (req,res)=>{
 
         Todo.remove({_id: req.params.todoID}).exec(function (err1,resT) {
             if (err) throw err1;
+            return res.json({info:"Success"});
 
             //res.status(200).send("Todo deleted")
         })

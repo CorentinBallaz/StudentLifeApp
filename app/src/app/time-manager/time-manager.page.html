@@ -120,64 +120,68 @@
         </ion-card-content>
       </ion-card>
     
-      <ion-row>
-        <!-- Change the displayed calendar mode -->
-        <ion-col size="4">
-          <ion-button expand="block" [color]="calendar.mode == 'month' ? 'primary' : 'secondary'" (click)="changeMode('month')">Mois</ion-button>
-        </ion-col>
-        <ion-col size="4">
-          <ion-button expand="block" [color]="calendar.mode == 'week' ? 'primary' : 'secondary'" (click)="changeMode('week')">Semaine</ion-button>
-        </ion-col>
-        <ion-col size="4">
-          <ion-button expand="block" [color]="calendar.mode == 'day' ? 'primary' : 'secondary'" (click)="changeMode('day')">Jour</ion-button>
-        </ion-col>
-    	
-        <!-- Move back one screen of the slides -->
-        <ion-col size="4" text-left>
-          <ion-button fill="clear" (click)="back()">
-            <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
-          </ion-button>
-        </ion-col>
-    	
-    	<ion-col size="4">
-    	</ion-col>
-        <!-- Move forward one screen of the slides -->
-        <ion-col size="4" text-right>
-          <ion-button fill="clear" (click)="next()">
-            <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    	
-      <ion-row>
-		  <ion-toolbar color="primary">
-		    <ion-title>
-		      {{ viewTitle }}
-		    </ion-title>
-		    <ion-buttons slot="end">
-		      <ion-button (click)="today()">Aujourd'hui</ion-button>
-		    </ion-buttons>
-		  </ion-toolbar>
-      </ion-row>
-      <calendar 
-      [eventSource]="eventSource" 
-      [calendarMode]="calendar.mode" 
-      [currentDate]="calendar.currentDate"
-      [locale]="calendar.locale"
-      allDayLabel="Work"
-      formatHourColumn="HH:mm"
-      formatWeekTitle = "MMMM yyyy, 'Semaine' w"
-      (onEventSelected)="onEventSelected($event)"
-      (onTitleChanged)="onViewTitleChanged($event)"
-      (onTimeSelected)="onTimeSelected($event)" 
-      startHour="7"
-      endHour="20"
-      step="30"
-      startingDayWeek="1"
-      startingDayMonth="0"
-      [weekviewNormalEventTemplate]="template"
-      [weekviewAllDayEventTemplate]="template">
-      </calendar>
+      
+
+      <ion-card>
+      	<ion-card-header>
+	      <ion-row>
+			  <ion-toolbar color="primary">
+			    <ion-title>
+			      {{ viewTitle }}
+			    </ion-title>
+			    <ion-buttons slot="end">
+			      <ion-button (click)="today()">Aller à aujourd'hui</ion-button>
+			    </ion-buttons>
+			  </ion-toolbar>
+	      </ion-row>
+
+	      <ion-row>
+	        <!-- Change the displayed calendar mode -->
+	        <ion-col size="4">
+	          <ion-button expand="block" [color]="calendar.mode == 'month' ? 'primary' : 'secondary'" (click)="changeMode('month')">Mois</ion-button>
+	        </ion-col>
+	        <ion-col size="4">
+	          <ion-button expand="block" [color]="calendar.mode == 'week' ? 'primary' : 'secondary'" (click)="changeMode('week')">Semaine</ion-button>
+	        </ion-col>
+	        <ion-col size="4">
+	          <ion-button expand="block" [color]="calendar.mode == 'day' ? 'primary' : 'secondary'" (click)="changeMode('day')">Jour</ion-button>
+	        </ion-col>
+
+	        <ion-col size="4"></ion-col>
+	        <ion-col size="4">
+	        	<ion-button fill="clear" (click)="back()" class="ion-float-left">
+		        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+		      	</ion-button>
+		      	<ion-button fill="clear" (click)="next()" class="ion-float-right">
+		        <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
+		      </ion-button>
+	        </ion-col>
+	        <ion-col size="4"></ion-col>
+	      </ion-row>
+  		</ion-card-header>
+
+	    <ion-card-content>
+	      <calendar 
+	      [eventSource]="eventSource" 
+	      [calendarMode]="calendar.mode" 
+	      [currentDate]="calendar.currentDate"
+	      [locale]="calendar.locale"
+	      allDayLabel="Work"
+	      formatHourColumn="HH:mm"
+	      formatWeekTitle = "MMMM yyyy, 'Semaine' w"
+	      (onEventSelected)="onEventSelected($event)"
+	      (onTitleChanged)="onViewTitleChanged($event)"
+	      (onTimeSelected)="onTimeSelected($event)" 
+	      startHour="7"
+	      endHour="20"
+	      step="30"
+	      startingDayWeek="1"
+	      startingDayMonth="0"
+	      [weekviewNormalEventTemplate]="template"
+	      [weekviewAllDayEventTemplate]="template">
+	      </calendar>
+  		</ion-card-content>
+      </ion-card>
       </ion-col>
 
 
