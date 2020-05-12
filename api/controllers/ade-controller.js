@@ -41,8 +41,8 @@ exports.getCoursesNumber = (req,res)=>{
             pipeline :[{$match : {startTime:{$gte: new Date(today.getFullYear(), today.getMonth()-2, today.getDate()),$lt: lt } }}, { $group: { _id: "$type", count: { $sum: 1 } }} ]
         }}],function (err,response) {
         if (err) throw err;
-        console.log(response[0]["eventsObject"])
-        res.status(200).send(response[0]["eventsObject"]);
+        // console.log(response[0]["eventsObject"])
+        res.status(200).send(response[0]);
     })
 
 };
