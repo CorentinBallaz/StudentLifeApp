@@ -28,7 +28,7 @@ eadCollection = db.eads
 eventCollection.drop()
 eadCollection.drop()
 
-eadIdu4Url = "http://ead-polytech.univ-savoie.fr/calendar/export_execute.php?userid=2813&authtoken=13051bf49a4754ed93c5616725899bbd1030002c&preset_what=all&preset_time=recentupcoming"
+eadIdu4Url = "http://ead-polytech.univ-savoie.fr/calendar/export_execute.php?userid=2813&authtoken=13051bf49a4754ed93c5616725899bbd1030002c&preset_what=all"
 
 contents = urllib.request.urlopen(eadIdu4Url)
 
@@ -49,9 +49,11 @@ for event in cal.walk('vevent') :
     eventEndTime = (event["DTEND"].dt).strftime("%d-%m-%Y")
     t = (event["DTEND"].dt)
     eventEndTimeDate = datetime.datetime(t.year, t.month, t.day)
-    
 
-    document = {"title":eventTitle,"description":eventDescription,"startTime":eventStartTimeDate,"endTime":eventEndTimeDate}
+
+    categorie = event['CATEGORIES'].to_ical().decode("UTF-8")
+
+    document = {"title":eventTitle,"description":eventDescription,"categorie" : categorie,"startTime":eventStartTimeDate,"endTime":eventEndTimeDate}
 
     res = eventCollection.insert_one(document)
     _id = res.inserted_id

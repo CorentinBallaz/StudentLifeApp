@@ -23,6 +23,7 @@ export class TimeManagerPage implements OnInit {
 	progression: number;
 	progressionString: any;
 	bars: any;
+	bar1:any;
   	colorArray: any;
 	isDesktop: boolean;
 	myTodosFinished = [];
@@ -31,6 +32,7 @@ export class TimeManagerPage implements OnInit {
 	todoForm: FormGroup;
 	eventSource = [];
   viewTitle: string;
+	daughnutChart:any;
   selectedDay = new Date();
 
 	calendar = {
@@ -431,10 +433,16 @@ export class TimeManagerPage implements OnInit {
 			  },
 			scales: {
 			  yAxes: [{
+				  gridLines: {
+					  display:false
+				  },
 				ticks: {
 				  beginAtZero: true
 				}
-			  }]
+			  }],
+			  xAxes:[{gridLines: {
+					  display:false
+				  }}]
 			}
 		  }
 		});
@@ -469,7 +477,7 @@ export class TimeManagerPage implements OnInit {
 			}
 
 
-			this.bars = new Chart(this.barChartCoursesOverview.nativeElement, {
+			this.bar1 = new Chart(this.barChartCoursesOverview.nativeElement, {
 				type: 'bar',
 				data: {
 					labels: allLabels,
@@ -481,22 +489,59 @@ export class TimeManagerPage implements OnInit {
 					}]
 				},
 				options: {
+
 					legend: {
 						display: false
 					},
 					scales: {
 						yAxes: [{
+							gridLines: {
+								display:false
+							},
 							ticks: {
 								beginAtZero: true
 							}
-						}]
+						}],
+						xAxes:[{gridLines: {
+								display:false
+							}}]
 					}
 				}
 			});
 
 		});
 	}
+	@ViewChild('daughnutHomework',{static: true}) daughnutHomework;
+	createDaughnut(){
 
+		//let res = await this.adeService.getAde();
+		this.daughnutChart = new Chart(this.daughnutHomework.nativeElement, {
+			type: 'doughnut',
+			data: {
+				datasets: [{
+					data: [2, 3],
+					backgroundColor: [
+						'rgb(0, 255, 0, 1)',
+						'rgb(255, 0, 0, 1)'
+					]
+				}]
+			},
+			options: {
+				legend: {
+					display: false
+				},
+				tooltips: {
+					enabled: false
+				},
+				title: {
+					display: false,
+					fontStyle: 'bold',
+					fontSize: 18
+				}
+			},
+
+		});
+	}
 	desiredTime: any;
 	changeTime(){
 		this.createBarChart1();
@@ -507,5 +552,6 @@ export class TimeManagerPage implements OnInit {
         this.buildAndPushAllEvents();
       this.desiredTime=1;
       this.createBarChart1();
+      this.createDaughnut();
     }
 }

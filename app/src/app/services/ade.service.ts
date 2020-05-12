@@ -39,5 +39,9 @@ export class AdeService {
 		})
 
 	}
+
+	getHomerWork(nbweek){
+
+	}
 }
 
