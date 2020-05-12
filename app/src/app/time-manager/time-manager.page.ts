@@ -430,15 +430,27 @@ export class TimeManagerPage implements OnInit {
 	@ViewChild('barChartCoursesOverview',{static: false}) barChartCoursesOverview;
 	createBarChart1(){
 		this.adeService.getCoursesOverview(this.desiredTime).then(res => {
-			let courseOver = res;
-			let allLabels = [];
-			let nbData = [];
+			let courseOver = res["eventsObject"];
+			let allLabels = ['CM','TD','TP'];
+			let nbData = [0,0,0];
 			console.log(res);
 			for (var  i=0;i<courseOver.length;i++){
 				if (courseOver[i]["_id"]!=="Other"){
-					console.log(courseOver);
-					allLabels.push(courseOver[i]["_id"]);
-					nbData.push(courseOver[i]["count"])
+					let index = 0;
+					switch ((courseOver[i]["_id"])) {
+						case "CM":
+							nbData[allLabels.indexOf('CM')]= courseOver[i]["count"];
+							break;
+						case 'TD':
+							nbData[allLabels.indexOf('TD')]= courseOver[i]["count"];
+							break;
+						case 'TP':
+							nbData[allLabels.indexOf('TP')]= courseOver[i]["count"];
+							break;
+						default:
+							break;
+					}
+
 				}
 
 			}
