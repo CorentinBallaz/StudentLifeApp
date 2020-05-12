@@ -26,18 +26,7 @@
     </ion-toolbar>
   </ion-header>
   <ion-router-outlet class="desktop-wrapper"></ion-router-outlet>
-  </div>
-
-<!-- <ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>
-      {{ viewTitle }}
-    </ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="today()">Aujourd'hui</ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header> -->
+</div>
 
 <ng-template #template let-displayEvent="displayEvent">
         <div *ngIf="displayEvent.event.type=='ADE'" [ngStyle]="adeEventStyle">{{displayEvent.event.title}}</div>
@@ -130,34 +119,6 @@
           </ion-row>
         </ion-card-content>
       </ion-card>
-      <ion-card>
-        <ion-card-header tappable (click)="collapseCard = !collapseCard">
-          <ion-card-title>New Event</ion-card-title>
-        </ion-card-header> 
-        <ion-card-content *ngIf="!collapseCard">
-    
-          <ion-item>
-            <ion-input type="text" placeholder="Title" [(ngModel)]="event.title"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-input type="text" placeholder="Description" [(ngModel)]="event.desc"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label>Start</ion-label>
-            <ion-datetime displayFormat="MM/DD/YYYY HH:mm" pickerFormat="MMM D:HH:mm" [(ngModel)]="event.startTime" [min]="minDate"></ion-datetime>
-          </ion-item>
-          <ion-item>
-            <ion-label>End</ion-label>
-            <ion-datetime displayFormat="MM/DD/YYYY HH:mm" pickerFormat="MMM D:HH:mm" [(ngModel)]="event.endTime" [min]="minDate"></ion-datetime>
-          </ion-item>
-          <ion-item>
-            <ion-label>All Day?</ion-label>
-            <ion-checkbox [(ngModel)]="event.allDay"></ion-checkbox>
-          </ion-item>
-          <ion-button fill="outline" expand="block" (click)="addEvent()" [disabled]="event.title == ''">Add Event</ion-button>
-    
-        </ion-card-content>
-      </ion-card> 
     
       <ion-row>
         <!-- Change the displayed calendar mode -->
@@ -170,24 +131,34 @@
         <ion-col size="4">
           <ion-button expand="block" [color]="calendar.mode == 'day' ? 'primary' : 'secondary'" (click)="changeMode('day')">Jour</ion-button>
         </ion-col>
-    
+    	
         <!-- Move back one screen of the slides -->
-        <ion-col size="6" text-left>
+        <ion-col size="4" text-left>
           <ion-button fill="clear" (click)="back()">
             <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
           </ion-button>
         </ion-col>
-    
+    	
+    	<ion-col size="4">
+    	</ion-col>
         <!-- Move forward one screen of the slides -->
-        <ion-col size="6" text-right>
+        <ion-col size="4" text-right>
           <ion-button fill="clear" (click)="next()">
             <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
           </ion-button>
         </ion-col>
-
-
       </ion-row>
-    
+    	
+      <ion-row>
+		  <ion-toolbar color="primary">
+		    <ion-title>
+		      {{ viewTitle }}
+		    </ion-title>
+		    <ion-buttons slot="end">
+		      <ion-button (click)="today()">Aujourd'hui</ion-button>
+		    </ion-buttons>
+		  </ion-toolbar>
+      </ion-row>
       <calendar 
       [eventSource]="eventSource" 
       [calendarMode]="calendar.mode" 

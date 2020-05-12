@@ -35,7 +35,7 @@ export class TimeManagerPage implements OnInit {
 
 	calendar = {
     	mode: 'week',
-    	currentDate: new Date(),
+    	currentDate: new Date("April 28, 2020 00:00:00"),
     	locale:"fr-FR"
   	};
 
@@ -49,7 +49,8 @@ export class TimeManagerPage implements OnInit {
   	};
 
   	adeEventStyle = {
-	  "background-color":"green" ,
+	  "background-color":"#057389" ,
+	  "border-radius": "4px",
 	  "overflow": "hidden",
 	  "color": "white",
 	  "height": "100%",
@@ -60,10 +61,11 @@ export class TimeManagerPage implements OnInit {
 	}
 
 	eadEventStyle = {
-	  "background-color":"red" ,
+	  "background-color":"#f7c73f" ,
+	  "border-radius": "2px",
 	  "overflow": "hidden",
 	  "color": "white",
-	  "height": "100%",
+	  "height": "90%",
 	  "width": "100%",
 	  "padding": "2px",
 	  "line-height": "15px",
@@ -71,17 +73,18 @@ export class TimeManagerPage implements OnInit {
 	}
 
 	todoEventStyle = {
-	  "background-color":"blue" ,
+	  "background-color":"#d29681" ,
+	  "border-radius": "2px",
 	  "overflow": "hidden",
 	  "color": "white",
-	  "height": "100%",
+	  "height": "90%",
 	  "width": "100%",
 	  "padding": "2px",
 	  "line-height": "15px",
 	  "text-align": "initial"
 	}
 
-  	minDate = new Date().toISOString();
+  	minDate = this.calendar.currentDate.toISOString();
 
   	@ViewChild(CalendarComponent,{static: false}) 
   	myCal: CalendarComponent;
@@ -98,27 +101,26 @@ export class TimeManagerPage implements OnInit {
 	   }
 
   	resetEvent() {
-    this.event = {
-     	title: '',
-      	desc: '',
-      	startTime: new Date().toISOString(),
-      	endTime: new Date().toISOString(),
-      	allDay: false,
-      	type:''
-    };
-  }
+	    this.event = {
+	     	title: '',
+	      	desc: '',
+	      	startTime: new Date().toISOString(),
+	      	endTime: new Date().toISOString(),
+	      	allDay: false,
+	      	type:''
+    	};
+  	}
 
-  	buildAndPushAllEvents() {
+  	async buildAndPushAllEvents() {
   		this.eventSource=[];
-  		this.adeService.getAde().then(res => {
-  			this.buildAndPushAdeEvents(res);
-  		});
-  		this.adeService.getEad().then(res => {
-  			this.buildAndPushEadEvents(res);
-  		});
-  		this.adeService.getTodos().then(res => {
-  			this.buildAndPushTodoEvents(res);
-  		});
+
+  		let adeEvents = await this.adeService.getAde();
+  		let eadEvents = await this.adeService.getEad();
+  		let todoEvents = await this.adeService.getTodos();
+
+  		this.buildAndPushAdeEvents(adeEvents);
+  		this.buildAndPushEadEvents(eadEvents);
+  		this.buildAndPushTodoEvents(todoEvents);
   	}
 
   	buildAndPushAdeEvents(data) {
@@ -170,7 +172,7 @@ export class TimeManagerPage implements OnInit {
 
 
   // Create the right event format and reload source
-  	addEvent() {
+  	/*addEvent() {
     	let eventCopy = {
       		title: this.event.title,
       		startTime:  new Date(this.event.startTime),
@@ -191,7 +193,7 @@ export class TimeManagerPage implements OnInit {
     this.eventSource.push(eventCopy);
     this.myCal.loadEvents();
     this.resetEvent();
-  }
+  } */
 
  // Change current month/week/day
  	next() {
