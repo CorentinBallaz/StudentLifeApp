@@ -139,15 +139,21 @@ export class TimeManagerPage implements OnInit {
   	}
 
   	buildAndPushEadEvents(data) {
+
         data.events.forEach(element => {
+
+        	let startTime = new Date(element.startTime);
+        	let endTime = new Date(element.endTime);
+
 		    let event={
 		        title:element.title,
-		        startTime:new Date(element.startTime),
-		        endTime:new Date(element.startTime),
+		        startTime:startTime,
+		        endTime:endTime,
 		        allDay: true,
 		        desc:element.description,
 		        type:"EAD"
 		    }
+
 		    this.eventSource.push(event);
 		});
 	    this.myCal.loadEvents();
@@ -155,11 +161,17 @@ export class TimeManagerPage implements OnInit {
 
   	buildAndPushTodoEvents(data) {
         data.forEach(element => {
+        	console.log(element.deadline);
+        	let startTime = new Date(element.deadline);
+        	let endTime = startTime;
+        	startTime.setHours(startTime.getHours()+2);
+        	
+        	endTime.setHours(startTime.getHours()+3);
         	if (element.isDone == false) {
         		let event={
 		        title:element.label,
-		        startTime:new Date(element.deadline),
-		        endTime:new Date(element.deadline),
+		        startTime:startTime,
+		        endTime:endTime,
 		        allDay: true,
 		        desc:element.content,
 		        type:"TODO"
@@ -227,15 +239,19 @@ export class TimeManagerPage implements OnInit {
   		let start = formatDate(event.startTime, 'medium', this.locale);
   		let end = formatDate(event.endTime, 'medium', this.locale);
  		let message;
-  		if (event.type == "EAD" || event.type == "TODO") {
-  			message="Deadline: "+start + '<br><br>'+event.desc;
+  		if (event.type == "EAD") {
+  			console.log(typeof(start));
+  			message="Deadline aujourd'hui ou demain minuit, regarde ton EAD !"+ '<br><br>'+event.desc;
+  		}
+
+  		else if (event.type == "TODO") {
+  			message=event.desc;
   		}
   		else {
-  			message='Début: ' + start + '<br><br>Fin: ' + end;
+  			message=event.desc+'<br><br>'+'Début: ' + start + '<br><br>Fin: ' + end;
   		}
   		const alert = await this.alertCtrl.create({
     	header: event.title,
-    	subHeader: event.desc,
     	message: message,
     	buttons: ['OK']
   		});
