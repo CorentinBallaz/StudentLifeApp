@@ -51,7 +51,7 @@ export class TimeManagerPage implements OnInit {
 
 	calendar = {
     	mode: 'week',
-    	currentDate: new Date("April 28, 2020 00:00:00"),
+    	currentDate: new Date(2020,2,30),
     	locale:"fr-FR"
   	};
 
