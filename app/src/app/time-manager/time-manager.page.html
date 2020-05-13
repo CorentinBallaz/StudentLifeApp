@@ -106,7 +106,7 @@
                 <ion-label >Courses Overview</ion-label>
               </ion-row>
               <ion-row>
-                <canvas  #barChartCoursesOverview height="250">
+                <canvas  #barChartCoursesOverview height="250" style="position: center">
 
                 </canvas>
 
@@ -114,7 +114,36 @@
 
             </ion-col>
             <ion-col size="4">
-              <img src="https://i.stack.imgur.com/rF4NV.png" />
+                <ion-row>
+                    <ion-label>Homeworks</ion-label>
+                    <canvas #daughnutHomework ></canvas>
+                </ion-row>
+                <ion-row style="height: 200px">
+                    <div scrolly = true style="max-height: 200px">
+
+                        <ion-list class="detailHomerwork">
+                            <ion-item *ngFor="let homework of listHomework" >
+                                <ion-label>
+                                <h2>{{homework.categorie}}</h2>
+                                    <h3>{{homework.title}}</h3>
+                                    <span>
+                                        <ion-datetime display-format="D MM YY" value="{{homework.startTime}}"  ></ion-datetime>
+                                    </span>
+                                </ion-label>
+
+                            </ion-item>
+
+
+                        </ion-list>
+                    </div>
+
+
+
+
+
+
+                </ion-row>
+
             </ion-col>
           </ion-row>
         </ion-card-content>

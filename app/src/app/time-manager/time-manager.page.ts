@@ -23,6 +23,7 @@ export class TimeManagerPage implements OnInit {
 	progression: number;
 	progressionString: any;
 	bars: any;
+	bar1:any;
   	colorArray: any;
 	isDesktop: boolean;
 	myTodosFinished = [];
@@ -31,6 +32,8 @@ export class TimeManagerPage implements OnInit {
 	todoForm: FormGroup;
 	eventSource = [];
   viewTitle: string;
+	daughnutChart:any;
+	listHomework:any;
   selectedDay = new Date();
 
 	calendar = {
@@ -448,10 +451,16 @@ export class TimeManagerPage implements OnInit {
 			  },
 			scales: {
 			  yAxes: [{
+				  gridLines: {
+					  display:false
+				  },
 				ticks: {
 				  beginAtZero: true
 				}
-			  }]
+			  }],
+			  xAxes:[{gridLines: {
+					  display:false
+				  }}]
 			}
 		  }
 		});
@@ -486,7 +495,7 @@ export class TimeManagerPage implements OnInit {
 			}
 
 
-			this.bars = new Chart(this.barChartCoursesOverview.nativeElement, {
+			this.bar1 = new Chart(this.barChartCoursesOverview.nativeElement, {
 				type: 'bar',
 				data: {
 					labels: allLabels,
@@ -498,25 +507,81 @@ export class TimeManagerPage implements OnInit {
 					}]
 				},
 				options: {
+
 					legend: {
 						display: false
 					},
 					scales: {
 						yAxes: [{
+							gridLines: {
+								display:false
+							},
 							ticks: {
 								beginAtZero: true
 							}
-						}]
+						}],
+						xAxes:[{gridLines: {
+								display:false
+							}}]
 					}
 				}
 			});
 
 		});
 	}
+	@ViewChild('daughnutHomework',{static: true}) daughnutHomework;
+	 async createDaughnut(){
 
+		let res =  await this.adeService.getHomerWork(this.desiredTime);
+		console.log(res);
+		let resa = res["eventsObject"];
+		this.listHomework=resa;
+		console.log(resa);
+		let countToDaugnhut = [];
+		let labelToDaugnhut=[];
+		for (var  i=0;i<resa.length;i++){
+			if (labelToDaugnhut.includes(resa[i]["categorie"])){
+				countToDaugnhut[labelToDaugnhut.indexOf(resa[i]["categorie"])]+=1;
+			}else{
+				labelToDaugnhut.push(resa[i]["categorie"]);
+				countToDaugnhut.push(1);
+			}
+		}
+		console.log(labelToDaugnhut)
+		this.daughnutChart = new Chart(this.daughnutHomework.nativeElement, {
+			type: 'doughnut',
+			data: {
+				labels: labelToDaugnhut,
+				datasets: [{
+					data: countToDaugnhut,
+					backgroundColor: [
+						'rgb(0, 255, 0, 1)',
+						'rgb(255, 0, 0, 1)'
+					]
+				}]
+			},
+			options: {
+				legend: {
+					display: false
+				},
+				// tooltips: {
+				// 	enabled: false
+				// },
+				title: {
+					display: false,
+					fontStyle: 'bold',
+					fontSize: 18
+				}
+			},
+
+		});
+	}
 	desiredTime: any;
 	changeTime(){
 		this.createBarChart1();
+		this.createDaughnut();
+
+
 	}
   ngOnInit() {
         this.resetEvent();
@@ -524,5 +589,6 @@ export class TimeManagerPage implements OnInit {
         this.buildAndPushAllEvents();
       this.desiredTime=1;
       this.createBarChart1();
+      this.createDaughnut();
     }
 }

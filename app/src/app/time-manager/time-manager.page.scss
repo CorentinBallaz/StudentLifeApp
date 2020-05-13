@@ -90,3 +90,14 @@ ion-header {
     position: fixed;
     bottom: 0px;
   }
+
+div[scrolly=true] {
+  overflow-y: auto;
+  width: 100%;
+
+}
+
+.detailHomerwork{
+  pointer-events: none;
+
+}

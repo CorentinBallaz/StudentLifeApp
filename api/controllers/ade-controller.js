@@ -1,6 +1,6 @@
 var Ade = require('../models/ade');
 var EventAde = require('../models/eventAde')
-
+var User = require('../models/user')
 exports.getEventsAde = (req,res)=> {
     Ade.findOne({filiere:"IDU4-A1"}).populate("events").exec(function (err,ade) {
         if (err) {
@@ -34,16 +34,26 @@ exports.getCoursesNumber = (req,res)=>{
             return res.status(400).send("udefinedDateType");
     }
 
+    User.find({_id:req.params.userID}).exec( async function(err,user){
+        if (err) {
+            return res.status(400).send({ 'msg': err });
+        }else {
+            let filiere =await  user[0]["filiere"];
+            // console.log(filiere)
+            Ade.aggregate([{$match : {filiere:filiere}},{ "$unwind": "$events" },{ "$lookup": {
+                    "from": "eventades",
+                    "as": "eventsObject",
+                    pipeline :[{$match : {startTime:{$gte: new Date(today.getFullYear(), today.getMonth()-2, today.getDate()),$lt: lt } }}, { $group: { _id: "$type", count: { $sum: 1 } }} ]
+                }}],function (err,response) {
+                if (err) throw err;
+                // console.log(response[0]["eventsObject"])
+                res.status(200).send(response[0]);
+            })
 
-    Ade.aggregate([{$match : {filiere: "IDU4-A1"}},{ "$unwind": "$events" },{ "$lookup": {
-            "from": "eventades",
-            "as": "eventsObject",
-            pipeline :[{$match : {startTime:{$gte: new Date(today.getFullYear(), today.getMonth()-2, today.getDate()),$lt: lt } }}, { $group: { _id: "$type", count: { $sum: 1 } }} ]
-        }}],function (err,response) {
-        if (err) throw err;
-        // console.log(response[0]["eventsObject"])
-        res.status(200).send(response[0]);
+        }
+
     })
+
 
 };
 
