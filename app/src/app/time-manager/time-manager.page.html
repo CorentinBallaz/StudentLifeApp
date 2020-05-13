@@ -73,7 +73,7 @@
         <ion-card-header>
           <ion-row>
             <ion-col size="4">
-              <ion-card-title>Important Data</ion-card-title>
+              <h1>Important Data</h1>
             </ion-col>
             <ion-col size="8">
               <div padding>
@@ -98,15 +98,31 @@
         </ion-card-header>
         <ion-card-content>
           <ion-row no-padding>
-            <ion-col size="4">
-              <img src="https://i.stack.imgur.com/rF4NV.png" />
+            <ion-col  size="4" >
+                <ion-row text-center class="headerName" >
+                    <h2>Workload</h2>
+                </ion-row >
+                <ion-row style="justify-content: center;">
+                    <ngx-gauge [value]="gaugeValue" [type]="gaugeType"  [cap]="gaugeForm" [thick]="gaugeThick" [thresholds]="thresholdConfig"   style="position: center" >
+                        <ngx-gauge-label *ngIf="gaugeValue <30">
+                            QUIET
+                        </ngx-gauge-label>
+                        <ngx-gauge-label *ngIf="gaugeValue >33 && gaugeValue<66">
+                            MIDLY
+                        </ngx-gauge-label>
+                        <ngx-gauge-label *ngIf="gaugeValue >66">
+                            BUSY
+                        </ngx-gauge-label>
+                    </ngx-gauge>
+                </ion-row>
+
             </ion-col>
             <ion-col size="4">
-              <ion-row>
-                <ion-label >Courses Overview</ion-label>
+              <ion-row class="headerName">
+                  <h2>Courses Overview</h2>
               </ion-row>
-              <ion-row>
-                <canvas  #barChartCoursesOverview height="250" style="position: center">
+              <ion-row style="height: 100%">
+                <canvas  #barChartCoursesOverview  style="height: 100%">
 
                 </canvas>
 
@@ -114,12 +130,12 @@
 
             </ion-col>
             <ion-col size="4">
-                <ion-row>
-                    <ion-label>Homeworks</ion-label>
+                <ion-row class="headerName">
+                    <h2>Homeworks</h2>
                     <canvas #daughnutHomework ></canvas>
                 </ion-row>
-                <ion-row style="height: 200px">
-                    <div scrolly = true style="max-height: 200px">
+                <ion-row style="height: 150px">
+                    <div scrolly = true style="max-height:150px">
 
                         <ion-list class="detailHomerwork">
                             <ion-item *ngFor="let homework of listHomework" >

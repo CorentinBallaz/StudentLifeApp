@@ -20,6 +20,7 @@ registerLocaleData(localeFr);
   styleUrls: ['./time-manager.page.scss'],
 })
 export class TimeManagerPage implements OnInit {
+	// desiredTime: any;
 	progression: number;
 	progressionString: any;
 	bars: any;
@@ -35,6 +36,18 @@ export class TimeManagerPage implements OnInit {
 	daughnutChart:any;
 	listHomework:any;
   selectedDay = new Date();
+
+	gaugeType:any;
+	gaugeValue:any;
+	gaugeLabel : any;
+	gaugeForm : any;
+	gaugeThick:any;
+
+
+	allLabels:any;
+	nbCourse:any;
+	nbHomeworks:any;
+
 
 	calendar = {
     	mode: 'week',
@@ -91,7 +104,8 @@ export class TimeManagerPage implements OnInit {
 
   	@ViewChild(CalendarComponent,{static: false}) 
   	myCal: CalendarComponent;
-
+	private thresholdConfig: { "0": { color: string }; "33": { color: string }; "66": { color: string } };
+	private desiredTime =1;
   	constructor(private formBuilder: FormBuilder, private todoService: TodoService, private alertCtrl: AlertController, @Inject(LOCALE_ID) private locale: string, private http : HttpClient, private adeService:AdeService, private screensizeService: ScreensizeService) {
 		this.screensizeService.isDesktopView().subscribe(isDesktop => {
 			if (this.isDesktop && !isDesktop) {
@@ -470,21 +484,22 @@ export class TimeManagerPage implements OnInit {
 	createBarChart1(){
 		this.adeService.getCoursesOverview(this.desiredTime).then(res => {
 			let courseOver = res["eventsObject"];
-			let allLabels = ['CM','TD','TP'];
-			let nbData = [0,0,0];
+			this.nbHomeworks=courseOver.length;
+			this.allLabels = ['CM','TD','TP'];
+			this.nbCourse = [0,0,0];
 			console.log(res);
 			for (var  i=0;i<courseOver.length;i++){
 				if (courseOver[i]["_id"]!=="Other"){
 					let index = 0;
 					switch ((courseOver[i]["_id"])) {
 						case "CM":
-							nbData[allLabels.indexOf('CM')]= courseOver[i]["count"];
+							this.nbCourse[this.allLabels.indexOf('CM')]= courseOver[i]["count"];
 							break;
 						case 'TD':
-							nbData[allLabels.indexOf('TD')]= courseOver[i]["count"];
+							this.nbCourse[this.allLabels.indexOf('TD')]= courseOver[i]["count"];
 							break;
 						case 'TP':
-							nbData[allLabels.indexOf('TP')]= courseOver[i]["count"];
+							this.nbCourse[this.allLabels.indexOf('TP')]= courseOver[i]["count"];
 							break;
 						default:
 							break;
@@ -495,12 +510,14 @@ export class TimeManagerPage implements OnInit {
 			}
 
 
+
+
 			this.bar1 = new Chart(this.barChartCoursesOverview.nativeElement, {
 				type: 'bar',
 				data: {
-					labels: allLabels,
+					labels: this.allLabels,
 					datasets: [{
-						data: nbData,
+						data: this.nbCourse,
 						backgroundColor: ['rgb(38, 194, 129)','rgb(38, 70, 200)','rgb(200, 115, 17)'], // array should have same number of elements as number of dataset
 						borderColor: ['rgb(38, 194, 129)','rgb(38, 70, 200)','rgb(200, 115, 17)'],// array should have same number of elements as number of dataset
 						borderWidth: -10
@@ -535,6 +552,8 @@ export class TimeManagerPage implements OnInit {
 		let res =  await this.adeService.getHomerWork(this.desiredTime);
 		console.log(res);
 		let resa = res["eventsObject"];
+
+
 		this.listHomework=resa;
 		console.log(resa);
 		let countToDaugnhut = [];
@@ -576,19 +595,89 @@ export class TimeManagerPage implements OnInit {
 
 		});
 	}
-	desiredTime: any;
-	changeTime(){
-		this.createBarChart1();
-		this.createDaughnut();
+	async changeWorkloadValue(){
+		let numberHours=0;
+		let nbSemaine = 1;
+		let res =  await this.adeService.getHomerWork(this.desiredTime);
+		let nbHomeworks=res["eventsObject"].length;
+		let nbCourseFromPromise = await this.adeService.getCoursesOverview(this.desiredTime);
+		let nbCourse=nbCourseFromPromise["eventsObject"]
+		console.log("course From promise")
+		console.log(nbCourse[0]["count"])
+		console.log(nbCourse)
+		for (var  i=0;i<nbCourse.length;i++){
+
+			switch (nbCourse[i]["_id"]) {
+				case "CM":
+					numberHours+= nbCourse[i]["count"]*1.5;
+					console.log("numbers hours" + numberHours)
+					break;
+				case "TD":
+					numberHours+= nbCourse[i]["count"]*1.5;
+					console.log("numbers hours" + numberHours)
+					break;
+				case "TP":
+					numberHours+= nbCourse[i]["count"]*4;
+					console.log("numbers hours" + numberHours)
+					break;
+			}
+
+
+		}
+		console.log('desisedTime' + this.desiredTime)
+		if (this.desiredTime == 1){
+			nbSemaine=1;
+		}else if (this.desiredTime == 2){
+			nbSemaine=2;
+		}else if (this.desiredTime == 3){
+			nbSemaine=4;
+		}
+
+		this.gaugeValue = (numberHours+nbHomeworks)/(40 * nbSemaine 	) *100;
+		console.log("numbers hours" + numberHours)
+		console.log("numbers homeworks"+ nbHomeworks)
+		console.log("gauge value " + this.gaugeValue)
+
+		if (this.gaugeValue<33){
+			this.gaugeLabel="QUIET"
+		}else if (this.gaugeValue>33 &&this.gaugeValue <66){
+			this.gaugeLabel="MIDLY BUSY"
+		}else {
+			this.gaugeLabel="BUSY"
+		}
+
+
 
 
 	}
+	changeTime(){
+		this.createBarChart1();
+		this.createDaughnut();
+		this.changeWorkloadValue()
+
+	}
   ngOnInit() {
-        this.resetEvent();
+
+
+
+	  this.resetEvent();
         this.resetTodo();
         this.buildAndPushAllEvents();
       this.desiredTime=1;
       this.createBarChart1();
       this.createDaughnut();
-    }
+	  this.changeWorkloadValue()
+	  this.gaugeType="arch";
+
+	  // this.gaugeLabel = "Workload";
+	  this.gaugeForm="round"
+	  this.gaugeThick=15;
+	  this.thresholdConfig = {
+		  '0': {color: 'green'},
+		  '33': {color: 'orange'},
+		  '66': {color: 'red'}
+	  };
+
+
+  }
 }

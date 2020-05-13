@@ -8,7 +8,7 @@ import { TimeManagerPageRoutingModule } from './time-manager-routing.module';
 import { TimeManagerPage } from './time-manager.page';
 
 import { NgCalendarModule  } from 'ionic2-calendar';
-
+import { NgxGaugeModule } from 'ngx-gauge';
 const routes: Routes = [
   {
     path: '',
@@ -24,7 +24,9 @@ const routes: Routes = [
     TimeManagerPageRoutingModule,
     NgCalendarModule,
     ReactiveFormsModule,
-    RouterModule.forChild(routes)
+
+    RouterModule.forChild(routes),
+    NgxGaugeModule
   ],
   declarations: [TimeManagerPage]
 })
