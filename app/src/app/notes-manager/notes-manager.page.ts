@@ -3,7 +3,7 @@ import { CalendarComponent } from 'ionic2-calendar/calendar';
 import { NavController, AlertController } from '@ionic/angular';
 import { formatDate } from '@angular/common';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { TodoService } from '../services/todo.service';
+import { NotesService } from '../services/notes.service';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { ScreensizeService } from '../services/screensize.service';
@@ -16,12 +16,11 @@ import { Chart } from 'chart.js'
 })
 
 export class NotesManagerPage implements OnInit {
-	@ViewChild('barChart',{static: false}) barChart;
 	isDesktop: boolean;
-	ListeUE : Array<any>;
+	listUE : Array<any>;
 	bars: any;
     colorArray: any;
-	constructor(private screensizeService: ScreensizeService) {
+	constructor(private screensizeService: ScreensizeService, private notesService: NotesService) {
 		this.screensizeService.isDesktopView().subscribe(isDesktop => {
 			if (this.isDesktop && !isDesktop) {
 			  // Reload because our routing is out of place
@@ -30,12 +29,24 @@ export class NotesManagerPage implements OnInit {
 	   
 			this.isDesktop = isDesktop;
 		  });
-		this.ListeUE=[{name : 'UE1'},{name : 'UE2'},{name : 'UE3'},{name : 'UE4'},{name : 'UE5'},{name : 'UE6'}];
+		  	this.listUE=[{name : 'UE1',visible:false},{name : 'UE2',visible:false},{name : 'UE3',visible:false}];
+		
 	   }
 	ionViewDidEnter() {
 		this.createBarChart();
 	}
-	createBarChart() {
+
+	// async getData(){
+	// 	this.listUE = [];
+	// 	await this.notesService.getNotes().subscribe(res => {
+	// 		for (var j = 0; j < Object.values(res).length; j++) {
+	// 		}
+	// 	});
+	// }
+
+	@ViewChild('barChart',{static: false}) barChart;
+
+	createBarChart(){
 		this.bars = new Chart(this.barChart.nativeElement, {
 			type: 'horizontalBar',
 			data: {
