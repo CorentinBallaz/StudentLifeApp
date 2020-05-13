@@ -7,10 +7,6 @@
         </ion-col>
         <ion-col size="8">
           <div class="navbar" class="ion-text-center">
-            <ion-button fill="clear" routerLink="/home" routerDirection="root" routerLinkActive="active-link"
-              class="link">
-              Home
-            </ion-button>
             <ion-button fill="clear" routerLink="/time-manager" routerDirection="root" routerLinkActive="active-link"
               class="link">
               Calendar
@@ -33,26 +29,35 @@
   </div>
 <ion-content>
   <ion-card *ngFor= "let ue of ListeUE"> 
-    ue={{ue.name}}
-      <ion-card-header tappable (click)="eg=!eg">
-        <ion-card-title>
-          <ion-grid>
+      <ion-card-header>
+        <ion-grid>
           <ion-row>
-            <ion-col>{{ue.name}}</ion-col>
-            <ion-col><canvas #barChart></canvas></ion-col>
-            <ion-col><canvas #horChart></canvas></ion-col>
-            <ion-col><canvas #boxPlot></canvas></ion-col>
-            <ion-col>52h tot</ion-col>
-            <ion-col>12.5</ion-col>
-            <ion-col>12.5</ion-col>
+            <ion-col size="4">
+              <ion-card-title>{{ue.name}}</ion-card-title>
+            </ion-col>
+            <ion-col size="5"><canvas #barChart height="90" width="400"></canvas></ion-col>
+            <ion-col size="1">
+              <ion-card-title>43</ion-card-title>
+            </ion-col>
+            <ion-col size="1">
+              <ion-card-title>12,6</ion-card-title>
+            </ion-col>
+            <ion-col size="1">
+              <ion-card-title>11,43</ion-card-title>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+      </ion-card-header> 
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="1"></ion-col>
+            <ion-col size="4"><canvas #boxPlot></canvas></ion-col>
+            <ion-col size="1"></ion-col>
+            <ion-col size="4"><canvas #horChart></canvas></ion-col>
           </ion-row>
           </ion-grid>
-        </ion-card-title>
-      </ion-card-header> 
-      <ion-card-content *ngIf="eg">
-        <ion-item>
-          <ion-input></ion-input>
-        </ion-item>
       </ion-card-content>
   </ion-card> 
 </ion-content>

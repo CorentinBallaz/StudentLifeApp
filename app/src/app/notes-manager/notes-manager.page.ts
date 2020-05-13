@@ -44,7 +44,7 @@ export class NotesManagerPage implements OnInit {
 		this.bars = new Chart(this.barChart.nativeElement, {
 			type: 'horizontalBar',
 			data: {
-				labels: ["AAA"],
+				labels: ["Nombre d'heures"],
 				datasets: [{
 					label: 'DATA1',
 					data: [20],
@@ -63,7 +63,7 @@ export class NotesManagerPage implements OnInit {
 			options: {
 				responsive: false,
 				legend: {
-					position: 'right'
+					position: 'bottom'
 				},
 				scales: {
 					xAxes: [{
