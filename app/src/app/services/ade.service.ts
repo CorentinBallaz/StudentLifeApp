@@ -40,8 +40,14 @@ export class AdeService {
 
 	}
 
-	getHomerWork(nbweek){
-
+	getHomerWork(nbWeek){
+		this.authService.checkToken();
+		const userID = this.authService.user['id'];
+		return new Promise((resolve,reject)=> {
+			this.http.get(`${this.url}/api/getEad/${userID}&${nbWeek}`).subscribe(res => {
+				resolve(res);
+			})
+		})
 	}
 }
 

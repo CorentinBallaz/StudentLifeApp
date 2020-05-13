@@ -33,6 +33,7 @@ export class TimeManagerPage implements OnInit {
 	eventSource = [];
   viewTitle: string;
 	daughnutChart:any;
+	listHomework:any;
   selectedDay = new Date();
 
 	calendar = {
@@ -512,14 +513,30 @@ export class TimeManagerPage implements OnInit {
 		});
 	}
 	@ViewChild('daughnutHomework',{static: true}) daughnutHomework;
-	createDaughnut(){
+	 async createDaughnut(){
 
-		//let res = await this.adeService.getAde();
+		let res =  await this.adeService.getHomerWork(this.desiredTime);
+		console.log(res);
+		let resa = res["eventsObject"];
+		this.listHomework=resa;
+		console.log(resa);
+		let countToDaugnhut = [];
+		let labelToDaugnhut=[];
+		for (var  i=0;i<resa.length;i++){
+			if (labelToDaugnhut.includes(resa[i]["categorie"])){
+				countToDaugnhut[labelToDaugnhut.indexOf(resa[i]["categorie"])]+=1;
+			}else{
+				labelToDaugnhut.push(resa[i]["categorie"]);
+				countToDaugnhut.push(1);
+			}
+		}
+		console.log(labelToDaugnhut)
 		this.daughnutChart = new Chart(this.daughnutHomework.nativeElement, {
 			type: 'doughnut',
 			data: {
+				labels: labelToDaugnhut,
 				datasets: [{
-					data: [2, 3],
+					data: countToDaugnhut,
 					backgroundColor: [
 						'rgb(0, 255, 0, 1)',
 						'rgb(255, 0, 0, 1)'
@@ -530,9 +547,9 @@ export class TimeManagerPage implements OnInit {
 				legend: {
 					display: false
 				},
-				tooltips: {
-					enabled: false
-				},
+				// tooltips: {
+				// 	enabled: false
+				// },
 				title: {
 					display: false,
 					fontStyle: 'bold',
@@ -545,6 +562,9 @@ export class TimeManagerPage implements OnInit {
 	desiredTime: any;
 	changeTime(){
 		this.createBarChart1();
+		this.createDaughnut();
+
+
 	}
   ngOnInit() {
         this.resetEvent();
