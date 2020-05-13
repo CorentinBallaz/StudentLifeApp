@@ -14,7 +14,7 @@ markes = db.marks
 courses = db.courses
 
 
-with open("./data/marks.json") as marks :
+with open("marks.json") as marks :
     markes.delete_many({})
     for line in marks:
         marks_json=json.loads(line)
@@ -24,7 +24,7 @@ with open("./data/marks.json") as marks :
     marks.close()
 
 
-with open("./data/structureBySpe.json") as struct:
+with open("structureBySpe.json") as struct:
     courses.delete_many({})
     for line in struct:
         struct_json = json.loads(line)

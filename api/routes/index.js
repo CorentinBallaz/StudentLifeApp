@@ -5,8 +5,8 @@ var passport	    = require('passport');
 var todoController  = require('../controllers/todo-controller');
 var adeController = require('../controllers/ade-controller');
 var eadController = require('../controllers/ead-controller');
-
-
+var structureController = require('../controllers/courses-controller');
+var marksController = require('../controllers/marks-controller')
 routes.get('/', (req, res) => {
     return res.send('Hello, this is the API!');
 });
@@ -63,6 +63,13 @@ routes.get('/getAde/coursesNumber/:userID&:numberWeek',(req,res)=>{
 
 routes.get('/getEad/:userID&:numberWeek',(req,res)=>{
     eadController.getEventsFromDate(req,res);
+})
+
+routes.get('/getStructure/:userID',(req,res)=>{
+    structureController.getStructureBySpe(req,res);
+})
+routes.get('/getMarks/:userID',(req,res)=>{
+    marksController.getMarks(req,res)
 })
 
 
