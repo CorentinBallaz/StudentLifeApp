@@ -158,16 +158,22 @@ export class TimeManagerPage implements OnInit {
   	buildAndPushEadEvents(data) {
 
         data.events.forEach(element => {
-
         	let startTime = new Date(element.startTime);
         	let endTime = new Date(element.endTime);
+        	let description;
+        	if(element.description != "") {
+        		description = element.title +'<br><br>'+element.description
+        	}
+        	else {
+        		description=element.title;
+        	}
 
 		    let event={
-		        title:element.title,
+		        title:element.categorie,
 		        startTime:startTime,
 		        endTime:endTime,
 		        allDay: true,
-		        desc:element.description,
+		        desc:description,
 		        type:"EAD"
 		    }
 
