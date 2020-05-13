@@ -13,20 +13,22 @@ exports.getEventsAde = (req,res)=> {
 } ;
 
 exports.getCoursesNumber = (req,res)=>{
+
+    //number course begining : 30 march 2020
     switch (req.params.numberWeek) {
         case "1":
             console.log("1week");
-            var today = new Date();
+            var today = new Date(2020,2,30);
             var lt = new Date(today.getFullYear(), today.getMonth(), today.getDate()+7);
             break;
 
         case "2":
-            var today = new Date();
+            var today = new Date(2020,2,30);
             var lt = new Date(today.getFullYear(), today.getMonth(), today.getDate()+14);
             break;
         case "3":
             console.log("1month");
-            var today = new Date();
+            var today = new Date(2020,2,30);
             var lt = new Date(today.getFullYear(), today.getMonth()+1, today.getDate());
             break;
         default:
@@ -43,7 +45,7 @@ exports.getCoursesNumber = (req,res)=>{
             Ade.aggregate([{$match : {filiere:filiere}},{ "$unwind": "$events" },{ "$lookup": {
                     "from": "eventades",
                     "as": "eventsObject",
-                    pipeline :[{$match : {startTime:{$gte: new Date(today.getFullYear(), today.getMonth()-2, today.getDate()),$lt: lt } }}, { $group: { _id: "$type", count: { $sum: 1 } }} ]
+                    pipeline :[{$match : {startTime:{$gte: new Date(today.getFullYear(), today.getMonth(), today.getDate()),$lt: lt } }}, { $group: { _id: "$type", count: { $sum: 1 } }} ]
                 }}],function (err,response) {
                 if (err) throw err;
                 // console.log(response[0]["eventsObject"])
