@@ -39,10 +39,9 @@ for event in cal.walk('vevent') :
     eventTitle = event["SUMMARY"].to_ical().decode("UTF-8")
     eventDescription = (event["DESCRIPTION"].to_ical().decode("UTF-8")).replace('\\n',' ')
     eventPlace = event["LOCATION"].to_ical().decode("UTF-8").replace('\\',' ')
-    
-    eventStartTime = (event["DTSTART"].dt+timedelta(hours=2)).strftime("%d-%m-%Y %H:%M")
+    eventStartTime = (event["DTSTART"].dt).strftime("%d-%m-%Y %H:%M:00")
     eventStartTimeDate = (event["DTSTART"].dt)
-    eventEndTime = (event["DTEND"].dt+timedelta(hours=2)).strftime("%d-%m-%Y %H:%M")
+    eventEndTime = (event["DTEND"].dt).strftime("%d-%m-%Y %H:%M:00")
     eventEndTimeDate = (event["DTEND"].dt)
     
     events=[]

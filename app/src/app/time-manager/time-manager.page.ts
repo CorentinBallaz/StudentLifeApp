@@ -142,15 +142,21 @@ export class TimeManagerPage implements OnInit {
   	}
 
   	buildAndPushEadEvents(data) {
+
         data.events.forEach(element => {
+
+        	let startTime = new Date(element.startTime);
+        	let endTime = new Date(element.endTime);
+
 		    let event={
 		        title:element.title,
-		        startTime:new Date(element.startTime),
-		        endTime:new Date(element.startTime),
+		        startTime:startTime,
+		        endTime:endTime,
 		        allDay: true,
 		        desc:element.description,
 		        type:"EAD"
 		    }
+
 		    this.eventSource.push(event);
 		});
 	    this.myCal.loadEvents();
@@ -158,11 +164,17 @@ export class TimeManagerPage implements OnInit {
 
   	buildAndPushTodoEvents(data) {
         data.forEach(element => {
+
+        	let startTime = new Date(element.deadline);
+        	startTime.setHours(startTime.getHours()+2);
+        	let endTime = startTime;
+
+
         	if (element.isDone == false) {
         		let event={
 		        title:element.label,
-		        startTime:new Date(element.deadline),
-		        endTime:new Date(element.deadline),
+		        startTime:startTime,
+		        endTime:endTime,
 		        allDay: true,
 		        desc:element.content,
 		        type:"TODO"
@@ -226,19 +238,25 @@ export class TimeManagerPage implements OnInit {
  
 // Calendar event was clicked
 	async onEventSelected(event) {
-  // Use Angular date pipe for conversion
-  		let start = formatDate(event.startTime, 'medium', this.locale);
+  		
+  		let start = formatDate(event.startTime, 'medium',this.locale);
   		let end = formatDate(event.endTime, 'medium', this.locale);
  		let message;
-  		if (event.type == "EAD" || event.type == "TODO") {
-  			message="Deadline: "+start + '<br><br>'+event.desc;
+  		if (event.type == "EAD") {
+  			message="Deadline aujourd'hui ou demain minuit, regarde ton EAD !"+ '<br><br>'+event.desc;
+  		}
+
+  		else if (event.type == "TODO") {
+  			let startDate = new Date(event.startTime);
+  			startDate.setHours(startDate.getHours()-2);
+  			let start = formatDate(startDate,'medium',this.locale);
+  			message=start.toString()+'<br><br>'+event.desc;
   		}
   		else {
-  			message='Début: ' + start + '<br><br>Fin: ' + end;
+  			message=event.desc+'<br><br>'+'Début: ' + start + '<br><br>Fin: ' + end;
   		}
   		const alert = await this.alertCtrl.create({
     	header: event.title,
-    	subHeader: event.desc,
     	message: message,
     	buttons: ['OK']
   		});
@@ -274,7 +292,6 @@ export class TimeManagerPage implements OnInit {
 		this.myTodosNotFinished = [];
 		let res = await this.todoService.getTodos();
 		for (var j = 0; j < Object.values(res).length; j++) {
-			console.log(Object.values(res)[j]);
 			var currentJson = {id:Object.values(res)[j]["_id"], label:Object.values(res)[j]['label'], content:Object.values(res)[j]["content"], deadline:Object.values(res)[j]["deadline"], categorie:Object.values(res)[j]["categorie"], isDone:Object.values(res)[j]["isDone"]};
 			if(Object.values(res)[j]["isDone"] === true){
 				this.myTodosFinished.push(currentJson);
