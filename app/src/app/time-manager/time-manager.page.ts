@@ -530,6 +530,9 @@ export class TimeManagerPage implements OnInit {
 					}]
 				},
 				options: {
+				    tooltips: {
+                    	enabled: false
+                    },
 
 					legend: {
 						display: false
@@ -552,6 +555,15 @@ export class TimeManagerPage implements OnInit {
 
 		});
 	}
+	removeBar1(){
+        // this.bar1.data.labels.pop();
+        // this.bar1.data.datasets.forEach((dataset) => {
+        //     dataset.data.pop();
+        // });
+	    // ;
+        this.bar1.destroy();
+        this.createBarChart1();
+    }
 	@ViewChild('daughnutHomework',{static: true}) daughnutHomework;
 	 async createDaughnut(){
 
@@ -657,7 +669,8 @@ export class TimeManagerPage implements OnInit {
 
 	}
 	changeTime(){
-		this.createBarChart1();
+	     this.removeBar1();
+		// this.createBarChart1();
 		this.createDaughnut();
 		this.changeWorkloadValue()
 
