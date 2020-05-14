@@ -12,7 +12,7 @@ const routes: Routes = [
   },
   {
     path: 'notes-manager',
-    loadChildren: () => import('./notes-manager/notes-manager.module').then( m => m.NotesManagerPageModule),
+    loadChildren: './notes-manager/notes-manager.module#NotesManagerPageModule',
     canActivate: [AuthGuardService]
   },
   {

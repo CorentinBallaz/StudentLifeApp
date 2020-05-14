@@ -1,19 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
+import { Routes, RouterModule } from '@angular/router';
 import { NotesManagerPageRoutingModule } from './notes-manager-routing.module';
-
 import { NotesManagerPage } from './notes-manager.page';
-var UEListe = [{name : 'UE1'},{name : 'UE2'},{name : 'UE3'},{name : 'UE4'},{name : 'UE5'},{name : 'UE6'}];
+
+const routes: Routes = [
+  {
+    path: '/notes-manager',
+    component: NotesManagerPage
+  }
+];
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    NotesManagerPageRoutingModule
+    NotesManagerPageRoutingModule,
+    RouterModule.forChild(routes),
   ],
   declarations: [NotesManagerPage]
 })

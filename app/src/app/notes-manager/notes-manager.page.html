@@ -29,7 +29,7 @@
   </div>
 <ion-content>
   <ion-card *ngFor= "let ue of ListeUE"> 
-      <ion-card-header>
+      <ion-card-header tappable (click)="clickOn(ue)">
         <ion-grid>
           <ion-row>
             <ion-col size="4">
@@ -49,7 +49,7 @@
         </ion-grid>
 
       </ion-card-header> 
-      <ion-card-content>
+      <ion-card-content *ngIf="ue.visible">
         <ion-grid>
           <ion-row>
             <ion-col size="1"></ion-col>

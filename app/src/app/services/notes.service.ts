@@ -13,11 +13,14 @@ export class NotesService {
 
   	constructor(private http:HttpClient, private authService: AuthService) { }
 
-    getNotes(){
-      return new Promise((resolve,reject)=> {
-  			this.http.get(`${this.url}/api/getEad`).subscribe(res => {
+	  getStructure(){
+		this.authService.checkToken();
+		const userID = this.authService.user['id'];
+		console.log(userID);
+     	return new Promise((resolve,reject)=> {
+  			this.http.get(`${this.url}/api/getStructure/${userID}`).subscribe(res => {
   				resolve(res);
-  			})
-  		})
+  			});
+  		});
     }
   }
