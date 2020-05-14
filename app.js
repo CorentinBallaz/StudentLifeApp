@@ -43,7 +43,8 @@ app.use('/api',routes);
 
 
 
-mongoose.connect(config.db, { useNewUrlParser: true , useCreateIndex: true});
+
+mongoose.connect(config.db, { useNewUrlParser: true , useCreateIndex: true,useUnifiedTopology: true,dbName:"studentLifeD"});
 const connection = mongoose.connection;
 
 
