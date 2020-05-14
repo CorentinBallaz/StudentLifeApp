@@ -16,6 +16,7 @@ import { Chart } from 'chart.js'
 })
 
 export class NotesManagerPage implements OnInit {
+	@ViewChild('boxPlot',{static: false}) boxPlot;
 	isDesktop: boolean;
 	ListeUE : Array<any>;
 	bars: any;
@@ -23,6 +24,7 @@ export class NotesManagerPage implements OnInit {
 	colorArray: any;
 	mixed:any;
 	box:any;
+	boxPlotMarksList : Array<any>;
 	constructor(private screensizeService: ScreensizeService, private notesService : NotesService) {
 		this.screensizeService.isDesktopView().subscribe(isDesktop => {
 			if (this.isDesktop && !isDesktop) {
@@ -32,7 +34,7 @@ export class NotesManagerPage implements OnInit {
 	   
 			this.isDesktop = isDesktop;
 		  });
-		this.ListeUE=[{name : 'UE1',visible: false},{name : 'UE2',visible: false},{name : 'UE3',visible: false},{name : 'UE4',visible: false},{name : 'UE5',visible: false},{name : 'UE6',visible: false}];
+		this.ListeUE=[{name : 'UE1',visible: true},{name : 'UE2',visible: false},{name : 'UE3',visible: false},{name : 'UE4',visible: false},{name : 'UE5',visible: false},{name : 'UE6',visible: false}];
 	   }
 	// ionViewDidEnter() {
 	// 	this.createBarChart();
@@ -40,7 +42,9 @@ export class NotesManagerPage implements OnInit {
 	// 	this.createboxplot();
 	// }
 	//@ViewChild('boxPlot',{static: false}) boxPlot;
+
 	clickOn(ue){
+		// this.createboxplot();
 		for(var i=0;i<this.ListeUE.length;i++){
 			if(ue.name === this.ListeUE[i]["name"]){
 				this.ListeUE[i]["visible"] = true;
@@ -48,6 +52,10 @@ export class NotesManagerPage implements OnInit {
 				this.ListeUE[i]["visible"] = false;
 			}
 		}
+		this.createboxplot()
+
+
+
 	}
 
 	async getStructure(){
@@ -134,76 +142,90 @@ export class NotesManagerPage implements OnInit {
 	//   }
 
 
-  	// //@ViewChild('boxPlot',{static: false}) boxPlot;
-	// createboxplot(){
-	// 	this.box = new Chart(this.boxPlot.nativeElement, {
-	// 		type: "bar",
-	// 		data: {
-	// 			labels: ['Data1','Data2','Data3'],
-	// 			datasets: [
-	// 			{
-	// 				label: "min",
-	// 				backgroundColor: "rgba(240, 140, 121, 0.0)",
-	// 				borderColor: "rgba(140, 140, 140, 0.0)",
-	// 				borderWidth: 0,
-	// 				data: [
-	// 				10,
-	// 				2,
-	// 				5
-	// 				],
-	// 			},
-	// 			{
-	// 				label: "avg",
-	// 				backgroundColor: "rgba(240, 140, 121, 0.8)",
-	// 				borderColor: "rgba(140, 140, 140, 1.0)",
-	// 				data: [
-	// 				12,
-	// 				8,
-	// 				10
-	// 				],
-	// 			},
-	// 			{
-	// 				label: "max",
-	// 				backgroundColor: "rgba(121, 200, 121, 0.8)",
-	// 				borderColor: "rgba(140, 140, 140, 0.0)",
-	// 				borderWidth: 0,
-	// 				data: [
-	// 				17,
-	// 				15,
-	// 				16
-	// 				],
-	// 			},
-	// 			{label: 'Avg Student',
-	// 			data: [15.5, 17, 20],
-	// 			type: 'line'
-	// 			},
-	// 			]
-	// 		},
-	// 		options: {
-	// 			tooltips: {
-	// 				mode: 'index',
-	// 				intersect: false,
-	// 				displayColors: false,
-	// 			},
-	// 			responsive: true,
-	// 			scales: {
-	// 			xAxes: [
-	// 				{
-	// 				stacked: true,
-	// 				}
-	// 			],
-	// 			yAxes: [
-	// 				{
-	// 				stacked: false,
-	// 				}
-	// 			]
-	// 			}
-	// 		}
-	// 	});
-	// }
 
+	createboxplot(){
+
+		this.box =  new Chart(this.boxPlot.nativeElement, {
+			type: "bar",
+			data: {
+				labels: ['Data1','Data2','Data3'],
+				datasets: [
+				{
+					label: "min",
+					backgroundColor: "rgba(240, 140, 121, 0.0)",
+					borderColor: "rgba(140, 140, 140, 0.0)",
+					borderWidth: 0,
+					data: [
+					10,
+					2,
+					5
+					],
+				},
+				{
+					label: "avg",
+					backgroundColor: "rgba(240, 140, 121, 0.8)",
+					borderColor: "rgba(140, 140, 140, 1.0)",
+					data: [
+					12,
+					8,
+					10
+					],
+				},
+				{
+					label: "max",
+					backgroundColor: "rgba(121, 200, 121, 0.8)",
+					borderColor: "rgba(140, 140, 140, 0.0)",
+					borderWidth: 0,
+					data: [
+					17,
+					15,
+					16
+					],
+				},
+				{label: 'Avg Student',
+				data: [15.5, 17, 20],
+				type: 'line'
+				},
+				]
+			},
+			options: {
+				tooltips: {
+					mode: 'index',
+					intersect: false,
+					displayColors: false,
+				},
+				responsive: true,
+				scales: {
+				xAxes: [
+					{
+					stacked: true,
+					}
+				],
+				yAxes: [
+					{
+					stacked: false,
+					}
+				]
+				}
+			}
+		})
+
+		// let container : HTMLElement  = document.getElementById("laBoxPlot");
+		// var content = container.innerHTML;
+		// container.innerHTML=content;
+		// console.log("refreshed")
+
+	}
+
+
+	ngAgfterViewInit(){
+		// this.createboxplot();
+		console.log("view init")
+	}
 
   ngOnInit() {
 	  this.getStructure();
+
+
   }
 }
