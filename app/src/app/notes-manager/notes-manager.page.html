@@ -29,7 +29,7 @@
   </div>
 
 
-<ion-content>
+<ion-content *ngIf="ListeUE">
   <ion-card *ngFor= "let ue of ListeUE"> 
       <ion-card-header tappable (click)="clickOn(ue)">
         <ion-grid>
@@ -37,7 +37,7 @@
             <ion-col size="4">
               <ion-card-title>{{ue.name}}</ion-card-title>
             </ion-col>
-            <ion-col size="5"><canvas #barChart height="90" width="400"></canvas></ion-col>
+            <ion-col size="5"><canvas #barChart class="{{'barChartHeader' + ue.name}}" height="90" width="400"></canvas></ion-col>
             <ion-col size="1">
               <ion-card-title>43</ion-card-title>
             </ion-col>
@@ -51,19 +51,18 @@
         </ion-grid>
 
       </ion-card-header> 
-      <ion-card-content [id]="ue.name" *ngIf="ue.visible" >
+      <ion-card-content [id]="ue.name" [hidden]="!ue.visible" >
           <ion-grid>
             <ion-row>
               <ion-col size="1"></ion-col>
-
                 <ion-col size="4">
-                  <div id="laBoxPlot">
-                    <canvas   #boxPlot ></canvas>
-                  </div>
+                    <canvas #barPlot class="{{'barChart' + ue.name}}"></canvas>
                 </ion-col>
-
-
-
+                <ion-col size="2"></ion-col>
+                <ion-col size="4">
+                    <canvas #horPlot class="{{'horChart' + ue.name}}"></canvas>
+                </ion-col>
+                
             </ion-row>
           </ion-grid>
 

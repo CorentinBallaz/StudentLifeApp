@@ -16,7 +16,7 @@ import { Chart } from 'chart.js'
 })
 
 export class NotesManagerPage implements OnInit {
-	@ViewChild('boxPlot',{static: false}) boxPlot;
+	@ViewChild('barPlot',{static: false}) barPlot;
 	isDesktop: boolean;
 	ListeUE : Array<any>;
 	bars: any;
@@ -34,8 +34,9 @@ export class NotesManagerPage implements OnInit {
 	   
 			this.isDesktop = isDesktop;
 		  });
-		this.ListeUE=[{name : 'UE1',visible: true},{name : 'UE2',visible: false},{name : 'UE3',visible: false},{name : 'UE4',visible: false},{name : 'UE5',visible: false},{name : 'UE6',visible: false}];
 	   }
+
+
 	// ionViewDidEnter() {
 	// 	this.createBarChart();
 	// 	this.createHorChart();
@@ -52,100 +53,79 @@ export class NotesManagerPage implements OnInit {
 				this.ListeUE[i]["visible"] = false;
 			}
 		}
-		this.createboxplot()
+		this.createboxplot(ue.name);
+		
 
 
 
 	}
 
-	async getStructure(){
-		let res = await this.notesService.getStructure();
-		console.log(res);
-	}
+ 	
 
+	@ViewChild('horPlot',{static: false}) horPlot;
+	createHorChart(ue, semestreContent) {
+		var coursesNames = [];
+		var coursesDetails = [{
+			  label: 'TP',
+			  data: [],
+			  backgroundColor: '#FF1C14',
+			  borderColor: '#FF1C14',
+			  borderWidth: 1
+			},
+			{
+			  label: 'TD',
+			  data: [],
+			  backgroundColor: '#3036FF', 
+			  borderColor: '#3036FF',
+			  borderWidth: 1
+			},
+			{
+				label: 'CM',
+				data: [],
+				backgroundColor: "#FFDC4A",
+				borderColor:"#FFDC4A",
+				borderWidth: 1
+			},
+			{
+				label:'Autre',
+				data:[],
+				backgroundColor:"#2BFF76",
+				borderColor:"#2BFF76",
+				borderWidth:1
+			}];
 
- 	// @ViewChild('barChart',{static: false}) barChart;
-	// createBarChart() {
-	// 	this.bars = new Chart(this.barChart.nativeElement, {
-	// 		type: 'horizontalBar',
-	// 		data: {
-	// 			labels: ["Nombre d'heures"],
-	// 			datasets: [{
-	// 				label: 'DATA1',
-	// 				data: [20],
-	// 				backgroundColor: "rgba(63,103,126,1)",
-	// 			}, {
-	// 				label: 'DATA2',
-	// 				data: [20],
-	// 				backgroundColor: "rgba(163,103,126,1)",
-	// 			}, {
-	// 				label: 'DATA3',
-	// 				data: [12],
-	// 				backgroundColor: "rgba(63,203,226,1)",
-	// 			}]
-	// 		},
+		for (var element in semestreContent) {
+			var ueContent = semestreContent[element];
+			coursesNames.push(ueContent["cours"]);
+			coursesDetails[0]["data"].push(ueContent["TP"]);
+			coursesDetails[1]["data"].push(ueContent["TD"]);
+			coursesDetails[2]["data"].push(ueContent["CM"]);
+			coursesDetails[3]["data"].push(ueContent["Autre"]);
+		}
 
-	// 		options: {
-	// 			responsive: false,
-	// 			legend: {
-	// 				position: 'bottom'
-	// 			},
-	// 			scales: {
-	// 				xAxes: [{
-	// 					stacked: true
-	// 				}],
-	// 				yAxes: [{
-	// 					stacked: true
-	// 				}]
-	// 			}
-	// 		}
-	// 	});
-	// } 
-	// @ViewChild('horChart',{static: false}) horChart;
-	// createHorChart() {
-	// 	this.horbar = new Chart(this.horChart.nativeElement, {
-	// 	  type: 'bar',
-	// 	  data: {
-	// 		labels: ['DATA1','DATA2','DATA3'],
-	// 		datasets: [{
-	// 		  label: 'TP',
-	// 		  data: [12, 16, 4],
-	// 		  backgroundColor: '#ddee44',
-	// 		  borderColor: '#ddee44',
-	// 		  borderWidth: 1
-	// 		},
-	// 		{
-	// 		  label: 'TD',
-	// 		  data: [3,6,9],
-	// 		  backgroundColor: '#dd1144', 
-	// 		  borderColor: '#dd1144',
-	// 		  borderWidth: 1
-	// 		},
-	// 		{
-	// 			label: 'CM',
-	// 			data: [9, 12, 15],
-	// 			backgroundColor: "rgba(63,203,226,1)",
-	// 			borderWidth: 1
-	// 		}]
-	// 	  },
-	// 	  options: {
-	// 		scales: {
-	// 			xAxes: [{
-	// 				stacked: true
-	// 			}],
-	// 			yAxes: [{
-	// 				stacked: true
-	// 			}]
-	// 		}
-	// 	}
-	// 	});
-	//   }
+		var ctx = document.getElementsByClassName("horChart"+ue)[0] as HTMLCanvasElement;
+		new Chart(ctx, {
+		  type: 'bar',
+		  data: {
+			labels: coursesNames,
+			datasets: coursesDetails
+		  },
+		  options: {
+			scales: {
+				xAxes: [{
+					stacked: true
+				}],
+				yAxes: [{
+					stacked: true
+				}]
+			}
+		}
+		});
+	  }
 
-
-
-	createboxplot(){
-
-		this.box =  new Chart(this.boxPlot.nativeElement, {
+	createboxplot(ue){
+		var ctx = document.getElementsByClassName("barChart"+ue)[0] as HTMLCanvasElement;
+		new Chart(ctx, {
 			type: "bar",
 			data: {
 				labels: ['Data1','Data2','Data3'],
@@ -210,22 +190,112 @@ export class NotesManagerPage implements OnInit {
 			}
 		})
 
-		// let container : HTMLElement  = document.getElementById("laBoxPlot");
-		// var content = container.innerHTML;
-		// container.innerHTML=content;
-		// console.log("refreshed")
+	}
+	
+	getRandomColor() {
+            var letters = '0123456789ABCDEF'.split('');
+            var color = '#';
+            for (var i = 0; i < 6; i++ ) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+                }
 
+
+	@ViewChild('barChart',{static: false}) barChart;
+	createBarChart(ue,semestreContent) {
+		var allCourses = [];
+		console.log(semestreContent);
+
+		for (var element in semestreContent) {
+			var ueContent = semestreContent[element];
+
+			var oneCours = {};
+			oneCours["label"]=ueContent["cours"];
+			let tpNumber=0;
+			let other=0;
+			let tdNumber=0;
+			let cmNumber=0;
+			if (ueContent["TP"]) {
+				tpNumber = ueContent["TP"];
+			}
+			if (ueContent["Autre"]) {
+				other = ueContent["Autre"];
+			}
+			if (ueContent["TD"]) {
+				tdNumber = ueContent["TD"];
+			}
+			if (ueContent["CM"]) {
+				cmNumber = ueContent["CM"];
+			}
+			
+			let sum = tpNumber+other+tdNumber+cmNumber;
+
+			oneCours["data"]=[sum];
+			oneCours["backgroundColor"]=this.getRandomColor();
+			console.log(oneCours);
+			allCourses.push(oneCours);
+			
+
+		}
+
+		var ctx = document.getElementsByClassName("barChartHeader"+ue)[0] as HTMLCanvasElement;
+		new Chart(ctx, {
+			type: 'horizontalBar',
+			data: {
+				labels: ["Nombre d'heures"],
+				datasets: allCourses
+			},
+
+			options: {
+				responsive: true,
+				legend: {
+					position: 'bottom'
+				},
+				scales: {
+              yAxes: [{
+              	  stacked:true,
+                  gridLines: {
+                      display:false
+                  },
+                ticks: {
+                  beginAtZero: true
+                }
+              }],
+              xAxes:[{stacked:true,gridLines: {
+                      display:false
+                  }}]
+            }
+			}
+		});
+	} 
+
+  	ngOnInit() {
+  	
+		this.notesService.getStructure().then(res=> {
+		  	let ueSemestre = res[0]["Semestre8"];
+		  	var test = [];
+		  	for(var propertyName in ueSemestre) {
+		  		let temp = {};
+		  		temp["name"]=propertyName;
+		  		temp["visible"]=false;
+		  		test.push(temp);
+			}
+			this.ListeUE = test;
+
+		});
 	}
 
 
-	ngAgfterViewInit(){
-		// this.createboxplot();
-		console.log("view init")
+	ngAfterViewInit() {
+		this.notesService.getStructure().then(res=> {
+		  	let ueSemestre = res[0]["Semestre8"];
+		  	var test = [];
+		  	for(var propertyName in ueSemestre) {
+		  		this.createBarChart(propertyName,ueSemestre[propertyName]);
+		  		this.createHorChart(propertyName,ueSemestre[propertyName]);
+			}
+
+		});
 	}
-
-  ngOnInit() {
-	  this.getStructure();
-
-
-  }
 }
