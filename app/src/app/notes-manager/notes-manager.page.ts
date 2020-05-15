@@ -129,9 +129,6 @@ export class NotesManagerPage implements OnInit {
 	  }
 
 	createboxplot(structure,courseMean,noteRes){
-		console.log(structure);
-		console.log(courseMean);
-		console.log(noteRes);
 
 		for (var ueValue in structure) {
 			let ueCourses = [];
@@ -156,7 +153,6 @@ export class NotesManagerPage implements OnInit {
 				studentNotes.push(studentMeanNote);
 
 			}
-			console.log(studentNotes);
 			var data = {
 			    labels: ueCourses,
 			    datasets: [
@@ -286,7 +282,7 @@ export class NotesManagerPage implements OnInit {
 		new Chart(ctx, {
 			type: 'horizontalBar',
 			data: {
-				labels: ["Nombre d'heures"],
+				labels: ["Nombre de cours"],
 				datasets: allCourses
 			},
 

@@ -48,7 +48,6 @@ export class TodoService {
   }
 
   deleteTodo(id_todo){
-    console.log("In delete");
     const userID = this.authService.user['id'];
     var Json={userID: userID, todoID: id_todo};
     return new Promise((resolve,reject)=> {

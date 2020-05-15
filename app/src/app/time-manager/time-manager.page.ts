@@ -51,7 +51,7 @@ export class TimeManagerPage implements OnInit {
 
 	calendar = {
     	mode: 'week',
-    	currentDate: new Date(2020,2,30),
+    	currentDate: new Date(2020,3,1),
     	locale:"fr-FR"
   	};
 
@@ -328,7 +328,6 @@ export class TimeManagerPage implements OnInit {
 	}
 
 	async onTodoSelected(todo) {
-		console.log(todo);
 		// Use Angular date pipe for conversion
 			let start = formatDate(todo.deadline, 'medium', this.locale);
 	   
@@ -374,7 +373,7 @@ export class TimeManagerPage implements OnInit {
 		var modifiate = false;
 		let alert = await this.alertCtrl.create({
 			header: todo.label,
-			message: "Add your modification here",
+			message: "Faites vos modifications",
 			inputs:[{
 				type:"text",
 				name:"label",
@@ -386,13 +385,13 @@ export class TimeManagerPage implements OnInit {
 				value:todo.content
 			}],
 			buttons: [{
-				text: 'Yes',
+				text: 'Valider',
 				handler: () => {
 					modifiate = true;
 				}
 			  },
 			  {
-				text: 'Cancel',
+				text: 'Annuler',
 				role: 'cancel',
 			  }]
 				});
@@ -408,23 +407,22 @@ export class TimeManagerPage implements OnInit {
 	  async deleteTodo(todo){
 	  	let deleted = false;
 		let alert = await this.alertCtrl.create({
-			header: "Confirmation to delete",
-			message: "Are you sure to delete ?",
+			header: "Attention",
+			message: "Etes vous sûr de vouloir supprimer ce TODO ?",
 			buttons: [{
-				text: 'Yes',
+				text: 'Oui',
 				handler: () => {
 					deleted = true;
 				}
 			  },
 			  {
-				text: 'Cancel',
+				text: 'Annuler',
 				role: 'cancel',
 			  }]
 				});
 			alert.present();
 		await alert.onDidDismiss();
 		if(deleted) {
-			console.log(todo.id);
 			await this.todoService.deleteTodo(todo.id);
 			this.getTodos();
 			this.buildAndPushAllEvents();
@@ -434,7 +432,6 @@ export class TimeManagerPage implements OnInit {
 	  async getCoursesOverview(){
   		this.adeService.getCoursesOverview(this.desiredTime).then(res => {
 			this.courseOverview=res;
-			console.log(res);
 		});
 
 	  }
@@ -493,7 +490,6 @@ export class TimeManagerPage implements OnInit {
 			this.nbHomeworks=courseOver.length;
 			this.allLabels = ['CM','TD','TP'];
 			this.nbCourse = [0,0,0];
-			console.log(res);
 			for (var  i=0;i<courseOver.length;i++){
 				if (courseOver[i]["_id"]!=="Other"){
 					let index = 0;
@@ -568,12 +564,10 @@ export class TimeManagerPage implements OnInit {
 	 async createDaughnut(){
 
 		let res =  await this.adeService.getHomerWork(this.desiredTime);
-		console.log(res);
 		let resa = res["eventsObject"];
 
 
 		this.listHomework=resa;
-		console.log(resa);
 		let countToDaugnhut = [];
 		let labelToDaugnhut=[];
 		for (var  i=0;i<resa.length;i++){
@@ -584,7 +578,6 @@ export class TimeManagerPage implements OnInit {
 				countToDaugnhut.push(1);
 			}
 		}
-		console.log(labelToDaugnhut)
 		this.daughnutChart = new Chart(this.daughnutHomework.nativeElement, {
 			type: 'doughnut',
 			data: {
@@ -620,29 +613,22 @@ export class TimeManagerPage implements OnInit {
 		let nbHomeworks=res["eventsObject"].length;
 		let nbCourseFromPromise = await this.adeService.getCoursesOverview(this.desiredTime);
 		let nbCourse=nbCourseFromPromise["eventsObject"]
-		console.log("course From promise")
-		console.log(nbCourse[0]["count"])
-		console.log(nbCourse)
 		for (var  i=0;i<nbCourse.length;i++){
 
 			switch (nbCourse[i]["_id"]) {
 				case "CM":
 					numberHours+= nbCourse[i]["count"]*1.5;
-					console.log("numbers hours" + numberHours)
 					break;
 				case "TD":
 					numberHours+= nbCourse[i]["count"]*1.5;
-					console.log("numbers hours" + numberHours)
 					break;
 				case "TP":
 					numberHours+= nbCourse[i]["count"]*4;
-					console.log("numbers hours" + numberHours)
 					break;
 			}
 
 
 		}
-		console.log('desisedTime' + this.desiredTime)
 		if (this.desiredTime == 1){
 			nbSemaine=1;
 		}else if (this.desiredTime == 2){
@@ -652,9 +638,6 @@ export class TimeManagerPage implements OnInit {
 		}
 
 		this.gaugeValue = (numberHours+nbHomeworks)/(40 * nbSemaine 	) *100;
-		console.log("numbers hours" + numberHours)
-		console.log("numbers homeworks"+ nbHomeworks)
-		console.log("gauge value " + this.gaugeValue)
 
 		if (this.gaugeValue<33){
 			this.gaugeLabel="QUIET"

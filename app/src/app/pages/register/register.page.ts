@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
- 
+import { ScreensizeService } from '../../services/screensize.service';
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
@@ -11,8 +12,18 @@ export class RegisterPage implements OnInit {
  
   credentialsForm: FormGroup;
   filieres: any;
+  isDesktop : boolean;
  
-  constructor(private formBuilder: FormBuilder, private authService: AuthService) { }
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private screensizeService: ScreensizeService) {
+  this.screensizeService.isDesktopView().subscribe(isDesktop => {
+      if (this.isDesktop && !isDesktop) {
+        // Reload because our routing is out of place
+        window.location.reload();
+      }
+     
+      this.isDesktop = isDesktop;
+      });
+   }
  
   ngOnInit() {
     this.credentialsForm = this.formBuilder.group({
