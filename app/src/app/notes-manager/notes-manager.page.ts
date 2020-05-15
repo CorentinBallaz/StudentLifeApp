@@ -38,14 +38,6 @@ export class NotesManagerPage implements OnInit {
 		  });
 	   }
 
-
-	// ionViewDidEnter() {
-	// 	this.createBarChart();
-	// 	this.createHorChart();
-	// 	this.createboxplot();
-	// }
-	//@ViewChild('boxPlot',{static: false}) boxPlot;
-
 	clickOn(ue){
 		// this.createboxplot();
 		for(var i=0;i<this.ListeUE.length;i++){
@@ -65,29 +57,29 @@ export class NotesManagerPage implements OnInit {
 		var coursesDetails = [{
 			  label: 'TP',
 			  data: [],
-			  backgroundColor: this.getColor(0),
-			  borderColor: this.getColor(0),
+			  backgroundColor: this.getColorOrange(0),
+			  borderColor: this.getColorOrange(0),
 			  borderWidth: 1
 			},
 			{
 			  label: 'TD',
 			  data: [],
-			  backgroundColor: this.getColor(0.33), 
-			  borderColor: this.getColor(0.33),
+			  backgroundColor: this.getColorOrange(0.33), 
+			  borderColor: this.getColorOrange(0.33),
 			  borderWidth: 1
 			},
 			{
 				label: 'CM',
 				data: [],
-				backgroundColor: this.getColor(0.66),
-				borderColor:this.getColor(0.66),
+				backgroundColor: this.getColorOrange(0.66),
+				borderColor:this.getColorOrange(0.66),
 				borderWidth: 1
 			},
 			{
 				label:'Autre',
 				data:[],
-				backgroundColor:this.getColor(0.99),
-				borderColor:this.getColor(0.99),
+				backgroundColor:this.getColorOrange(0.99),
+				borderColor:this.getColorOrange(0.99),
 				borderWidth:1
 			}];
 
@@ -143,7 +135,6 @@ export class NotesManagerPage implements OnInit {
 				minNotes.push(courseMean[ueCourses[matiere]]["noteMin"]);
 				maxNotes.push(courseMean[ueCourses[matiere]]["noteMax"]);
 				noteMoyenne.push(courseMean[ueCourses[matiere]]["moyenne"]);
-				console.log(noteRes);
 				for (let parcours in noteRes) {
 					if ("Semestre8" in noteRes[parcours]) {
 						let studentCourseNotes = noteRes[parcours]["Semestre8"][ueCourses[matiere]];
@@ -242,9 +233,16 @@ export class NotesManagerPage implements OnInit {
 
 	}
 	
-	getColor(t) {
-		let color = d3.interpolatePlasma(t);
+	getColorBlue(t) {
+		t = 0.3+t*0.7;
+		let color = d3.interpolatePuBu(t);
         return color;
+    }
+
+    getColorOrange(t) {
+    	t = 0.3+t*0.7;
+    	let color = d3.interpolateOranges(t);
+    	return color;
     }
 
 	@ViewChild('barChart',{static: false}) barChart;
@@ -278,7 +276,7 @@ export class NotesManagerPage implements OnInit {
 
 			oneCours["data"]=[sum];
 			let t = cpt / semestreSize;
-			oneCours["backgroundColor"]=this.getColor(t);
+			oneCours["backgroundColor"]=this.getColorBlue(t);
 			cpt += 1;
 			allCourses.push(oneCours);
 			
