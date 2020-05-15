@@ -4,6 +4,7 @@ import { NavController, AlertController } from '@ionic/angular';
 import { formatDate } from '@angular/common';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NotesService } from '../services/notes.service';
+import {AuthService} from "../services/auth.service";
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { ScreensizeService } from '../services/screensize.service';
@@ -27,7 +28,7 @@ export class NotesManagerPage implements OnInit {
 	mixed:any;
 	box:any;
 	boxPlotMarksList : Array<any>;
-	constructor(private screensizeService: ScreensizeService, private notesService : NotesService) {
+	constructor(private screensizeService: ScreensizeService, private notesService : NotesService,private authService : AuthService) {
 		this.screensizeService.isDesktopView().subscribe(isDesktop => {
 			if (this.isDesktop && !isDesktop) {
 			  // Reload because our routing is out of place
@@ -58,7 +59,9 @@ export class NotesManagerPage implements OnInit {
 	}
 
  	
-
+	logout(){
+		this.authService.logout();
+	}
 	@ViewChild('horPlot',{static: false}) horPlot;
 	createHorChart(ue, semestreContent) {
 		var coursesNames = [];

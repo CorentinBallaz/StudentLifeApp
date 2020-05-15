@@ -4,6 +4,7 @@ import { NavController, AlertController } from '@ionic/angular';
 import { formatDate } from '@angular/common';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TodoService } from '../services/todo.service';
+import {AuthService} from "../services/auth.service";
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { ScreensizeService } from '../services/screensize.service';
@@ -106,7 +107,7 @@ export class TimeManagerPage implements OnInit {
   	myCal: CalendarComponent;
 	private thresholdConfig: { "0": { color: string }; "33": { color: string }; "66": { color: string } };
 	private desiredTime =1;
-  	constructor(private formBuilder: FormBuilder, private todoService: TodoService, private alertCtrl: AlertController, @Inject(LOCALE_ID) private locale: string, private http : HttpClient, private adeService:AdeService, private screensizeService: ScreensizeService) {
+  	constructor(private formBuilder: FormBuilder,private authService : AuthService,private todoService: TodoService, private alertCtrl: AlertController, @Inject(LOCALE_ID) private locale: string, private http : HttpClient, private adeService:AdeService, private screensizeService: ScreensizeService) {
 		this.screensizeService.isDesktopView().subscribe(isDesktop => {
 			if (this.isDesktop && !isDesktop) {
 			  // Reload because our routing is out of place
@@ -346,7 +347,7 @@ export class TimeManagerPage implements OnInit {
 	  }
 
 	  logout(){
-		  this.todoService.logout();
+		  this.authService.logout();
 	  }
 
 	  async finishTodo(todo){
