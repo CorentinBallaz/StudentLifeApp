@@ -4,7 +4,6 @@ import { NavController, AlertController } from '@ionic/angular';
 import { formatDate } from '@angular/common';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TodoService } from '../services/todo.service';
-
 import {AuthService} from "../services/auth.service";
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';

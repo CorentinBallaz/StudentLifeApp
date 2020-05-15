@@ -11,7 +11,6 @@ import { ScreensizeService } from '../services/screensize.service';
 import { HttpClient } from '@angular/common/http';
 import { Chart } from 'chart.js';
 import * as d3 from "d3";
-import {AuthService} from "../services/auth.service";
 
 @Component({
   selector: 'app-notes-manager',
