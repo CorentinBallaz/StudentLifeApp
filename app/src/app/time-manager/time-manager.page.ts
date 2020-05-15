@@ -324,6 +324,11 @@ export class TimeManagerPage implements OnInit {
 		if(this.progressionString === "NaN"){
 			this.progressionString = 0;
 		}
+		try{
+			this.bars.destroy();
+		}catch (e) {
+
+		}
 		this.createBarChart();
 	}
 
@@ -457,8 +462,8 @@ export class TimeManagerPage implements OnInit {
 			datasets: [{
 			  label: 'Nb of todos',
 			  data: nbData,
-			  backgroundColor: ['rgb(38, 194, 129)','rgb(38, 70, 200)','rgb(200, 115, 17)'], // array should have same number of elements as number of dataset
-			  borderColor: ['rgb(38, 194, 129)','rgb(38, 70, 200)','rgb(200, 115, 17)'],// array should have same number of elements as number of dataset
+			  backgroundColor: ['#9261FF','#47FF60','#FF982E'], // array should have same number of elements as number of dataset
+			  // borderColor: ['rgb(38, 194, 129)','rgb(38, 70, 200)','rgb(200, 115, 17)'],// array should have same number of elements as number of dataset
 			  borderWidth: -10
 			}]
 		  },
@@ -585,8 +590,11 @@ export class TimeManagerPage implements OnInit {
 				datasets: [{
 					data: countToDaugnhut,
 					backgroundColor: [
-						'rgb(0, 255, 0, 1)',
-						'rgb(255, 0, 0, 1)'
+						'#94D4FF',
+						'#FFA2A1',
+						'#86FFEF',
+						'#FFC36E',
+						'#7AFFA2'
 					]
 				}]
 			},
