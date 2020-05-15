@@ -520,8 +520,8 @@ export class TimeManagerPage implements OnInit {
 					labels: this.allLabels,
 					datasets: [{
 						data: this.nbCourse,
-						backgroundColor: ['rgb(38, 194, 129)','rgb(38, 70, 200)','rgb(200, 115, 17)'], // array should have same number of elements as number of dataset
-						borderColor: ['rgb(38, 194, 129)','rgb(38, 70, 200)','rgb(200, 115, 17)'],// array should have same number of elements as number of dataset
+						backgroundColor: ['#7B88FB', '#2535C7' , '#17217A' ], // array should have same number of elements as number of dataset
+						// borderColor: ['rgb(38, 194, 129)','rgb(38, 70, 200)','rgb(200, 115, 17)'],// array should have same number of elements as number of dataset
 						borderWidth: -10
 					}]
 				},
