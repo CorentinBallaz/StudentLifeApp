@@ -143,14 +143,21 @@ export class NotesManagerPage implements OnInit {
 				minNotes.push(courseMean[ueCourses[matiere]]["noteMin"]);
 				maxNotes.push(courseMean[ueCourses[matiere]]["noteMax"]);
 				noteMoyenne.push(courseMean[ueCourses[matiere]]["moyenne"]);
-
-				let studentCourseNotes = noteRes[0]["Semestre8"][ueCourses[matiere]];
-				let studentMeanNote = 0;
-				for (let note in studentCourseNotes) {
-					studentMeanNote += studentCourseNotes[note];
+				console.log(noteRes);
+				for (let parcours in noteRes) {
+					if ("Semestre8" in noteRes[parcours]) {
+						let studentCourseNotes = noteRes[parcours]["Semestre8"][ueCourses[matiere]];
+						let studentMeanNote = 0;
+						for (let note in studentCourseNotes) {
+							studentMeanNote += studentCourseNotes[note];
+						}
+						studentMeanNote = studentMeanNote / 4;
+						studentNotes.push(studentMeanNote);
+						break;
+					}
 				}
-				studentMeanNote = studentMeanNote / 4;
-				studentNotes.push(studentMeanNote);
+				
+				
 
 			}
 			var data = {
@@ -361,7 +368,7 @@ export class NotesManagerPage implements OnInit {
 
 			this.notesService.getNotes().then(notesRes=>
 			{
-
+				console.log(notesRes);
 				this.notesService.getAllStudentMarksSemesterFiliere().then(classRes=>{
 				let studentNumber = classRes["length"];
 				let courseMean = {};
