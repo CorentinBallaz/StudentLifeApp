@@ -166,7 +166,7 @@ export class NotesManagerPage implements OnInit {
 			      {
 			        label: "Note la plus basse",
 			        data: minNotes,
-			        backgroundColor: "red",
+			        backgroundColor: "#FF8C89",
 			        borderColor: "#FF8C89",
 			        fill: false,
 			        lineTension: 0,
@@ -175,7 +175,7 @@ export class NotesManagerPage implements OnInit {
 			      {
 			        label: "Moyenne de la classe",
 			        data: noteMoyenne,
-			        backgroundColor: "orange",
+			        backgroundColor: "#ffb38a",
 			        borderColor: "#ffb38a",
 			        fill: false,
 			        lineTension: 0,
@@ -184,7 +184,7 @@ export class NotesManagerPage implements OnInit {
 			      {
 			        label: "Note la plus haute",
 			        data: maxNotes,
-			        backgroundColor: "green",
+			        backgroundColor: "lightgreen",
 			        borderColor: "lightgreen",
 			        fill: false,
 			        lineTension: 0,
