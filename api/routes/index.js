@@ -69,7 +69,11 @@ routes.get('/getStructure/:userID',(req,res)=>{
     structureController.getStructureBySpe(req,res);
 })
 routes.get('/getMarks/:userID',(req,res)=>{
-    marksController.getMarks(req,res)
+    marksController.getMarks(req,res);
+})
+
+routes.get('/getMarksSemestreFiliere/:filiere&:semestre',(req,res)=>{
+    marksController.getMarksSemestreFiliere(req,res);
 })
 
 

@@ -8,7 +8,9 @@ import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { ScreensizeService } from '../services/screensize.service';
 import { HttpClient } from '@angular/common/http';
-import { Chart } from 'chart.js'
+import { Chart } from 'chart.js';
+import * as d3 from "d3";
+
 @Component({
   selector: 'app-notes-manager',
   templateUrl: './notes-manager.page.html',
@@ -16,7 +18,7 @@ import { Chart } from 'chart.js'
 })
 
 export class NotesManagerPage implements OnInit {
-	@ViewChild('barPlot',{static: false}) barPlot;
+	@ViewChild('linePlot',{static: false}) linePlot;
 	isDesktop: boolean;
 	ListeUE : Array<any>;
 	bars: any;
@@ -53,11 +55,6 @@ export class NotesManagerPage implements OnInit {
 				this.ListeUE[i]["visible"] = false;
 			}
 		}
-		this.createboxplot(ue.name);
-		
-
-
-
 	}
 
  	
@@ -68,29 +65,29 @@ export class NotesManagerPage implements OnInit {
 		var coursesDetails = [{
 			  label: 'TP',
 			  data: [],
-			  backgroundColor: '#FF1C14',
-			  borderColor: '#FF1C14',
+			  backgroundColor: this.getColor(0),
+			  borderColor: this.getColor(0),
 			  borderWidth: 1
 			},
 			{
 			  label: 'TD',
 			  data: [],
-			  backgroundColor: '#3036FF', 
-			  borderColor: '#3036FF',
+			  backgroundColor: this.getColor(0.33), 
+			  borderColor: this.getColor(0.33),
 			  borderWidth: 1
 			},
 			{
 				label: 'CM',
 				data: [],
-				backgroundColor: "#FFDC4A",
-				borderColor:"#FFDC4A",
+				backgroundColor: this.getColor(0.66),
+				borderColor:this.getColor(0.66),
 				borderWidth: 1
 			},
 			{
 				label:'Autre',
 				data:[],
-				backgroundColor:"#2BFF76",
-				borderColor:"#2BFF76",
+				backgroundColor:this.getColor(0.99),
+				borderColor:this.getColor(0.99),
 				borderWidth:1
 			}];
 
@@ -103,7 +100,7 @@ export class NotesManagerPage implements OnInit {
 			coursesDetails[3]["data"].push(ueContent["Autre"]);
 		}
 
-		var ctx = document.getElementsByClassName("horChart"+ue)[0] as HTMLCanvasElement;
+		let ctx = document.getElementsByClassName("horChart"+ue)[0] as HTMLCanvasElement;
 		new Chart(ctx, {
 		  type: 'bar',
 		  data: {
@@ -111,6 +108,14 @@ export class NotesManagerPage implements OnInit {
 			datasets: coursesDetails
 		  },
 		  options: {
+		  	responsive:true,
+		  	title: {
+			      display: true,
+			      position: "top",
+			      text: "Répartition des cours par matière",
+			      fontSize: 18,
+			      fontColor: "#111"
+			    },
 			scales: {
 				xAxes: [{
 					stacked: true
@@ -123,90 +128,127 @@ export class NotesManagerPage implements OnInit {
 		});
 	  }
 
-	createboxplot(ue){
-		var ctx = document.getElementsByClassName("barChart"+ue)[0] as HTMLCanvasElement;
-		new Chart(ctx, {
-			type: "bar",
-			data: {
-				labels: ['Data1','Data2','Data3'],
-				datasets: [
-				{
-					label: "min",
-					backgroundColor: "rgba(240, 140, 121, 0.0)",
-					borderColor: "rgba(140, 140, 140, 0.0)",
-					borderWidth: 0,
-					data: [
-					10,
-					2,
-					5
-					],
-				},
-				{
-					label: "avg",
-					backgroundColor: "rgba(240, 140, 121, 0.8)",
-					borderColor: "rgba(140, 140, 140, 1.0)",
-					data: [
-					12,
-					8,
-					10
-					],
-				},
-				{
-					label: "max",
-					backgroundColor: "rgba(121, 200, 121, 0.8)",
-					borderColor: "rgba(140, 140, 140, 0.0)",
-					borderWidth: 0,
-					data: [
-					17,
-					15,
-					16
-					],
-				},
-				{label: 'Avg Student',
-				data: [15.5, 17, 20],
-				type: 'line'
-				},
-				]
-			},
-			options: {
-				tooltips: {
-					mode: 'index',
-					intersect: false,
-					displayColors: false,
-				},
-				responsive: true,
-				scales: {
-				xAxes: [
-					{
-					stacked: true,
-					}
-				],
-				yAxes: [
-					{
-					stacked: false,
-					}
-				]
-				}
+	createboxplot(structure,courseMean,noteRes){
+		console.log(structure);
+		console.log(courseMean);
+		console.log(noteRes);
+
+		for (var ueValue in structure) {
+			let ueCourses = [];
+			for (let matiere in structure[ueValue]) {
+				ueCourses.push(structure[ueValue][matiere]);
 			}
-		})
+			let minNotes = [];
+			let maxNotes = [];
+			let noteMoyenne = [];
+			let studentNotes = [];
+			for (let matiere in ueCourses) {
+				minNotes.push(courseMean[ueCourses[matiere]]["noteMin"]);
+				maxNotes.push(courseMean[ueCourses[matiere]]["noteMax"]);
+				noteMoyenne.push(courseMean[ueCourses[matiere]]["moyenne"]);
+
+				let studentCourseNotes = noteRes[0]["Semestre8"][ueCourses[matiere]];
+				let studentMeanNote = 0;
+				for (let note in studentCourseNotes) {
+					studentMeanNote += studentCourseNotes[note];
+				}
+				studentMeanNote = studentMeanNote / 4;
+				studentNotes.push(studentMeanNote);
+
+			}
+			console.log(studentNotes);
+			var data = {
+			    labels: ueCourses,
+			    datasets: [
+			    {
+			        label: "Vos notes",
+			        data: studentNotes,
+			        backgroundColor: "blue",
+			        borderColor: "blue",
+			        fill: false,
+			        lineTension: 0,
+			        radius: 5
+			      },
+			      {
+			        label: "Note la plus basse",
+			        data: minNotes,
+			        backgroundColor: "red",
+			        borderColor: "#FF8C89",
+			        fill: false,
+			        lineTension: 0,
+			        radius: 5
+			      },
+			      {
+			        label: "Moyenne de la classe",
+			        data: noteMoyenne,
+			        backgroundColor: "orange",
+			        borderColor: "#ffb38a",
+			        fill: false,
+			        lineTension: 0,
+			        radius: 5
+			      },
+			      {
+			        label: "Note la plus haute",
+			        data: maxNotes,
+			        backgroundColor: "green",
+			        borderColor: "lightgreen",
+			        fill: false,
+			        lineTension: 0,
+			        radius: 5
+			      }
+			      
+			    ]
+			  };
+
+			  let ctx = document.getElementsByClassName("barChart"+ueValue)[0] as HTMLCanvasElement;
+				new Chart(ctx, {
+					type:"line",
+					data:data,
+					options:{
+			    responsive: true,
+			    title: {
+			      display: true,
+			      position: "top",
+			      text: "Votre position par rapport à votre promotion",
+			      fontSize: 18,
+			      fontColor: "#111"
+			    },
+			    legend: {
+			      display: true,
+			      position: "bottom",
+			      labels: {
+			        fontColor: "#333",
+			        fontSize: 16
+			      }
+			    },
+			    scales: {
+				    yAxes: [{
+				      ticks: {
+				        max: 20,
+				        min: 0
+				      }
+				    }]
+				  }
+			  }
+
+			})
+		}
+
+		
+		
 
 	}
 	
-	getRandomColor() {
-            var letters = '0123456789ABCDEF'.split('');
-            var color = '#';
-            for (var i = 0; i < 6; i++ ) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-                }
-
+	getColor(t) {
+		let color = d3.interpolatePlasma(t);
+        return color;
+    }
 
 	@ViewChild('barChart',{static: false}) barChart;
-	createBarChart(ue,semestreContent) {
+	createBarChart(ue,semestreContent, largerUe) {
 		var allCourses = [];
-		console.log(semestreContent);
-
+		let semestreSize = largerUe;
+		let cpt = 0;
 		for (var element in semestreContent) {
 			var ueContent = semestreContent[element];
 
@@ -232,14 +274,15 @@ export class NotesManagerPage implements OnInit {
 			let sum = tpNumber+other+tdNumber+cmNumber;
 
 			oneCours["data"]=[sum];
-			oneCours["backgroundColor"]=this.getRandomColor();
-			console.log(oneCours);
+			let t = cpt / semestreSize;
+			oneCours["backgroundColor"]=this.getColor(t);
+			cpt += 1;
 			allCourses.push(oneCours);
 			
 
 		}
 
-		var ctx = document.getElementsByClassName("barChartHeader"+ue)[0] as HTMLCanvasElement;
+		let ctx = document.getElementsByClassName("barChartHeader"+ue)[0] as HTMLCanvasElement;
 		new Chart(ctx, {
 			type: 'horizontalBar',
 			data: {
@@ -249,6 +292,13 @@ export class NotesManagerPage implements OnInit {
 
 			options: {
 				responsive: true,
+				title: {
+			      display: true,
+			      position: "top",
+			      text: "Nombre de cours par matière",
+			      fontSize: 18,
+			      fontColor: "#111"
+			    },
 				legend: {
 					position: 'bottom'
 				},
@@ -288,14 +338,86 @@ export class NotesManagerPage implements OnInit {
 
 
 	ngAfterViewInit() {
-		this.notesService.getStructure().then(res=> {
-		  	let ueSemestre = res[0]["Semestre8"];
+		
+		this.notesService.getStructure().then(structureRes=> {
+		  	let ueSemestre = structureRes[0]["Semestre8"];
 		  	var test = [];
+		  	let largerUe = 0 ;
+		  	var structure = {};
+		  	for (var ue in ueSemestre) {
+		  		if (ueSemestre[ue].length > largerUe) {
+		  			largerUe = ueSemestre[ue].length;
+		  		}
+		  	}
+
 		  	for(var propertyName in ueSemestre) {
-		  		this.createBarChart(propertyName,ueSemestre[propertyName]);
+		  		this.createBarChart(propertyName,ueSemestre[propertyName], largerUe);
 		  		this.createHorChart(propertyName,ueSemestre[propertyName]);
 			}
 
-		});
+			for (var ue in ueSemestre) {
+				structure[ue] = [];
+				for (var temp in ueSemestre[ue]) {
+					structure[ue].push(ueSemestre[ue][temp]["cours"]);
+				}
+				
+			}
+
+			this.notesService.getNotes().then(notesRes=>
+			{
+
+				this.notesService.getAllStudentMarksSemesterFiliere().then(classRes=>{
+				let studentNumber = classRes["length"];
+				let courseMean = {};
+				
+				for (var json in classRes) {
+					var studentNotes = classRes[json]["Semestre8"];
+					for (var course in studentNotes) {
+						let meanCtTpTdCc = 0;
+						for (var type in studentNotes[course]) {
+							meanCtTpTdCc+=studentNotes[course][type];
+						}
+						meanCtTpTdCc = meanCtTpTdCc / 4;
+
+						if(!courseMean[course]) {
+							courseMean[course]={};
+						}
+
+						if (courseMean[course]["moyenne"]) {
+							courseMean[course]["moyenne"] += (meanCtTpTdCc / studentNumber);
+						}
+						else {
+							courseMean[course]["moyenne"] = (meanCtTpTdCc / studentNumber);
+						}
+
+						if (!courseMean[course]["noteMax"]) {
+							courseMean[course]["noteMax"] = meanCtTpTdCc;
+						}
+						else {
+							if (meanCtTpTdCc > courseMean[course]["noteMax"]) {
+								courseMean[course]["noteMax"] = meanCtTpTdCc;
+							}
+						}
+
+						if (!courseMean[course]["noteMin"]) {
+							courseMean[course]["noteMin"] = meanCtTpTdCc;
+						}
+						else {
+							if (meanCtTpTdCc < courseMean[course]["noteMin"]) {
+								courseMean[course]["noteMin"] = meanCtTpTdCc;
+							}
+						}
+
+					}
+				}
+				this.createboxplot(structure,courseMean,notesRes);
+
+			})
+			})
+			
+
+			});
+
+		
 	}
 }

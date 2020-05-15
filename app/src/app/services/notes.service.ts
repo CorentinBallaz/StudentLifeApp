@@ -23,4 +23,21 @@ export class NotesService {
   			});
   		});
     }
+
+    getNotes() {
+      const userID = this.authService.user['id'];
+      return new Promise((resolve,reject)=> {
+        this.http.get(`${this.url}/api/getMarks/${userID}`).subscribe(res => {
+          resolve(res);
+        });
+      });
+    }
+
+    getAllStudentMarksSemesterFiliere() {
+      return new Promise((resolve,reject)=> {
+        this.http.get(`${this.url}/api/getMarksSemestreFiliere/IDU&Semestre8`).subscribe(res => {
+          resolve(res);
+        });
+      });
+    }
   }
